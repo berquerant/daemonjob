@@ -20,7 +20,7 @@ jobs:
     permissions:
       packages: write # for ghcr
       contents: read
-    name: Publish container images
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
@@ -111,7 +111,7 @@ jobs:
     permissions:
       packages: write # for ghcr
       contents: write # for github release
-    name: Release chart
+    name: Release
     runs-on: ubuntu-latest
     env:
       PACKAGE: tmp/package

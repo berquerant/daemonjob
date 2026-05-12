@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-    name: Run on Ubuntu
+    name: E2E Test
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
@@ -47,7 +47,7 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-    name: Run on Ubuntu
+    name: Test Manifest
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
@@ -66,7 +66,7 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-    name: Run on Ubuntu
+    name: Test Chart
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
