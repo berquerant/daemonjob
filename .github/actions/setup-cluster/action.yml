@@ -3,10 +3,10 @@ description: Set up cluster
 runs:
   using: "composite"
   steps:
-    - name: Init
-      run: make init
     - name: Setup env
       uses: ./.github/actions/setup-env
+    - name: Init
+      run: make init
     - name: Setup go
       uses: ./.github/actions/setup-go
     - name: Create cluster

@@ -25,6 +25,8 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+      - name: Setup env
+        uses: ./.github/actions/setup-env
       - name: Init
         run: make init
       - name: Cache docker local
@@ -34,8 +36,6 @@ jobs:
           path: ${{ env.DOCKER_CACHE_DIR }}
       - name: Setup buildx
         uses: ./.github/actions/setup-buildx
-      - name: Setup env
-        uses: ./.github/actions/setup-env
       - name: Setup go
         uses: ./.github/actions/setup-go
       - name: Running Test e2e

@@ -26,14 +26,14 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+      - name: Setup env
+        uses: ./.github/actions/setup-env
       - name: Init
         run: make init
       - name: Set version
         id: version
         run: |
           echo "version=$(./hack/version.sh)" >> $GITHUB_OUTPUT
-      - name: Setup env
-        uses: ./.github/actions/setup-env
       - name: Setup go
         uses: ./.github/actions/setup-go
       - name: Login to ghcr
@@ -116,10 +116,10 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: true
-      - name: Init
-        run: make init
       - name: Setup env
         uses: ./.github/actions/setup-env
+      - name: Init
+        run: make init
       - name: Package the chart
         run: ./hack/tool.sh helm package --destination "$PACKAGE" "$CHART"
       - name: Login to ghcr
