@@ -133,12 +133,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push chart
+        id: push-chart
         env:
           package_file: "${PACKAGE}/daemonjob-${{ needs.publish.outputs.version }}.tgz"
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: |
           ./hack/tool.sh helm push $package_file $remote
-          echo package_file=$package_file >> $GITHUB_ENV
+          echo package_file=$package_file >> $GITHUB_OUTPUT
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Create release
@@ -152,3 +153,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ref: ${{ github.ref_name }}
           prerelease: ${{ needs.publish.outputs.prerelease }}
+          package_file: ${{ steps.push-chart.outputs.package_file }}
