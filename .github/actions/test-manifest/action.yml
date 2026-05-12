@@ -8,5 +8,5 @@ runs:
       run: ./hack/tool.sh kubectl apply -f manifests/install.yaml --server-side=true
     - name: Wait until daemonjob-controller-manager is available
       shell: bash
-      run: ./hack/tool.sh kubectl -n daemonjob-system wait --for=condition=available --timeout=2m deployment/daemonjob-controller-manager
+      run: ./hack/tool.sh kubectl -n daemonjob-system wait --for=condition=available --timeout=5m deployment/daemonjob-controller-manager
 
