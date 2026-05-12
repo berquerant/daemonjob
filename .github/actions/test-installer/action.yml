@@ -20,6 +20,7 @@ runs:
       uses: ./.github/actions/cache-docker-local
       with:
         path: ${{ inputs.docker-cache-dir }}
+        restore-only: true
       if: ${{ inputs.docker-cache-dir != '' }}
     - name: Setup buildx
       uses: ./.github/actions/setup-buildx
@@ -27,6 +28,8 @@ runs:
     - name: Build images
       shell: bash
       run: make docker-build
+      env:
+        DOCKER_CACHE_READONLY: "true"
       if: ${{ inputs.build-images == 'true' }}
     - name: Load images
       shell: bash
