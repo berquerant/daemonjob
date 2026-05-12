@@ -43,7 +43,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup buildx
-        use: ./.github/actions/setup-buildx
+        uses: ./.github/actions/setup-buildx
       - name: Check prerelease
         id: check
         run: |
