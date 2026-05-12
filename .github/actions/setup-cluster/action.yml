@@ -6,8 +6,10 @@ runs:
     - name: Setup env
       uses: ./.github/actions/setup-env
     - name: Init
+      shell: bash
       run: make init
     - name: Setup go
       uses: ./.github/actions/setup-go
     - name: Create cluster
+      shell: bash
       run: make create-cluster
