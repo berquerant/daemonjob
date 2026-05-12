@@ -1,0 +1,13 @@
+name: Cluster Setup
+description: Set up cluster
+runs:
+  using: "composite"
+  steps:
+    - name: Init
+      run: make init
+    - name: Setup env
+      uses: ./.github/actions/setup-env
+    - name: Setup go
+      uses: ./.github/actions/setup-go
+    - name: Create cluster
+      run: make create-cluster

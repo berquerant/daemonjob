@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "daemonjob.fullname" . }}-controller-manager
+  labels:
+  {{- include "daemonjob.labels" . | nindent 4 }}
+data:
+  BROADCAST_IMAGE_REPOSITORY: {{ .Values.controllerManager.broadcastImageRepository
+    | quote }}
+  BROADCAST_IMAGE_TAG: {{ .Values.controllerManager.broadcastImageTag | quote }}
+  BROADCAST_ROLE: {{ .Values.controllerManager.broadcastRole | quote }}

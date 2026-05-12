@@ -1,0 +1,27 @@
+resources:
+  - ../samples
+patches:
+  - target:
+      kind: DaemonJob
+      name: daemonjob-sample
+    patch: |
+      - op: replace
+        path: /spec/nodeSelector
+        value:
+          nodeIndex: "1"
+  - target:
+      kind: DaemonCronJob
+      name: daemoncronjob-sample
+    patch: |
+      - op: replace
+        path: /spec/nodeSelector
+        value:
+          nodeIndex: "1"
+  - target:
+      kind: DaemonCronJobSet
+      name: daemoncronjobset-sample
+    patch: |
+      - op: replace
+        path: /spec/nodeSelector
+        value:
+          nodeIndex: "1"

@@ -1,0 +1,81 @@
+name: E2E Tests
+
+permissions: {}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  KUBECONFIG: "${{ github.workspace }}/tmp/.kubeconfig"
+
+jobs:
+  test-e2e:
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    name: Run on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Init
+        run: make init
+      - name: Cache docker local
+        id: cache-docker-local
+        uses: ./.github/actions/cache-docker-local
+        with:
+          path: ${{ env.DOCKER_CACHE_DIR }}
+      - name: Setup buildx
+        uses: ./.github/actions/setup-buildx
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+      - name: Setup go
+        uses: ./.github/actions/setup-go
+      - name: Running Test e2e
+        run: make test-e2e
+
+  test-manifest:
+    needs:
+      - test-e2e
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    name: Run on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Test installer
+        uses: ./.github/actions/test-installer
+        with:
+          build-images: true
+          docker-cache-dir: ${{ env.DOCKER_CACHE_DIR }}
+
+  test-chart:
+    needs:
+      - test-e2e
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    name: Run on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Test installer
+        uses: ./.github/actions/test-installer
+        with:
+          build-images: true
+          docker-cache-dir: ${{ env.DOCKER_CACHE_DIR }}
+          chart: charts/daemonjob

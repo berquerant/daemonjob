@@ -1,0 +1,45 @@
+resources:
+  - ../samples
+patches:
+  - target:
+      kind: DaemonJob
+      name: daemonjob-sample
+    patch: |
+      - op: replace
+        path: /spec/jobTemplate/spec/template/spec/containers/0/command
+        value:
+          - bash
+          - -c
+          - |
+            echo I will abort after 2 seconds
+            sleep 2
+            echo Aborted! > /dev/termination-log
+            exit 10
+  - target:
+      kind: DaemonCronJob
+      name: daemoncronjob-sample
+    patch: |
+      - op: replace
+        path: /spec/cronJobTemplate/spec/jobTemplate/spec/template/spec/containers/0/command
+        value:
+          - bash
+          - -c
+          - |
+            echo I will abort after 2 seconds
+            sleep 2
+            echo Aborted! > /dev/termination-log
+            exit 10
+  - target:
+      kind: DaemonCronJobSet
+      name: daemoncronjobset-sample
+    patch: |
+      - op: replace
+        path: /spec/cronJobTemplate/spec/jobTemplate/spec/template/spec/containers/0/command
+        value:
+          - bash
+          - -c
+          - |
+            echo I will abort after 2 seconds
+            sleep 2
+            echo Aborted! > /dev/termination-log
+            exit 10

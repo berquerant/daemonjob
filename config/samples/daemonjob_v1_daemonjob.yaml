@@ -1,0 +1,37 @@
+apiVersion: daemonjob.berquerant.github.io/v1
+kind: DaemonJob
+metadata:
+  labels:
+    app.kubernetes.io/name: daemonjob
+    app.kubernetes.io/managed-by: kustomize
+  name: daemonjob-sample
+spec:
+  nodeSelector: {}
+  broadcastJobSpec:
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 300m
+        memory: 100Mi
+  jobTemplate:
+    metadata:
+      annotations:
+        app: sample
+      labels:
+        app.kubernetes.io/name: sample
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: main
+              image: debian:trixie-slim
+              command:
+                - bash
+                - -c
+                - |
+                  sleep 2
+                  echo Done!

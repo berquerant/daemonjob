@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "daemonjob.fullname" . }}-daemoncronjobset-admin-role
+  labels:
+  {{- include "daemonjob.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - daemonjob.berquerant.github.io
+  resources:
+  - daemoncronjobsets
+  verbs:
+  - '*'
+- apiGroups:
+  - daemonjob.berquerant.github.io
+  resources:
+  - daemoncronjobsets/status
+  verbs:
+  - get

@@ -1,0 +1,14 @@
+name: Test Helm Chart
+description: Test the chart is installable
+inputs:
+  chart:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Test chart
+      shell: bash
+      run: ./hack/tool.sh helm install -n daemonjob-system --create-namespace my-daemonjob $chart --wait --timeout=2m
+      env:
+        chart: ${{ inputs.chart }}
+

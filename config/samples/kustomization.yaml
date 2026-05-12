@@ -1,0 +1,6 @@
+## Append samples of your project ##
+resources:
+- daemonjob_v1_daemonjob.yaml
+- daemonjob_v1_daemoncronjob.yaml
+- daemonjob_v1_daemoncronjobset.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

@@ -1,0 +1,12 @@
+name: Test Manifest
+description: Test the manifest is appliable
+runs:
+  using: "composite"
+  steps:
+    - name: Apply manifest
+      shell: bash
+      run: ./hack/tool.sh kubectl apply -f manifests/install.yaml
+    - name: Wait until daemonjob-controller-manager is available
+      shell: bash
+      run: ./hack/tool.sh kubectl -n daemonjob-system wait --for=condition=available --timeout=2m deployment/daemonjob-controller-manager
+

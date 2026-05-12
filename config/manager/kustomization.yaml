@@ -1,0 +1,16 @@
+resources:
+- manager.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: controller
+  newName: ghcr.io/berquerant/daemonjob/manager
+  newTag: 0.0.0
+configMapGenerator:
+- literals:
+  - BROADCAST_ROLE=daemonjob-broadcast-role
+  - BROADCAST_IMAGE_REPOSITORY=ghcr.io/berquerant/daemonjob/broadcast
+  - BROADCAST_IMAGE_TAG=0.0.0
+  name: controller-manager
+  options:
+    disableNameSuffixHash: true

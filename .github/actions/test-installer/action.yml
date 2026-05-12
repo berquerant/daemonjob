@@ -1,0 +1,42 @@
+name: Test Installer
+description: Test installers are available
+inputs:
+  build-images:
+    required: false
+    default: 'true'
+  docker-cache-dir:
+    required: false
+  chart:
+    required: false
+    default: ''
+    description: Chart directory
+runs:
+  using: "composite"
+  steps:
+    - name: Setup cluster
+      uses: ./.github/actions/setup-cluster
+    - name: Cache docker local
+      id: cache-docker-local
+      uses: ./.github/actions/cache-docker-local
+      with:
+        path: ${{ inputs.docker-cache-dir }}
+      if: ${{ inputs.docker-cache-dir != '' }}
+    - name: Setup buildx
+      uses: ./.github/actions/setup-buildx
+      if: ${{ inputs.build-images == 'true' }}
+    - name: Build images
+      shell: bash
+      run: make docker-build
+      if: ${{ inputs.build-images == 'true' }}
+    - name: Load images
+      shell: bash
+      run: make load
+    - name: Test manifest
+      uses: ./.github/actions/test-manifest
+      if: ${{ inputs.chart == '' }}
+    - name: Test chart
+      uses: ./.github/actions/test-chart
+      with:
+        chart: ${{ inputs.chart }}
+      if: ${{ inputs.chart != '' }}
+

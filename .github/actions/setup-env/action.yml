@@ -1,0 +1,23 @@
+name: Env Setup
+description: Set environment variables
+runs:
+  using: "composite"
+  steps:
+    - name: Import environment variables
+      shell: bash
+      run: |
+        cat <<EOS >> "$GITHUB_ENV"
+        KUBECTL_VERSION=v1.36.0
+        CONTROLLER_GEN_VERSION=v0.20.1
+        KUSTOMIZE_VERSION=v5.8.1
+        GOLANGCI_LINT_VERSION=v2.11.4
+        K0S_VERSION=v1.35.3-k0s.0
+        GO_LICENSES_VERSION=v2.0.1
+        HELMIFY_VERSION=v0.4.19
+        CRD_REF_DOCS_VERSION=v0.3.0
+        HELM_VERSION=v4.1.4
+        HELM_SCHEMA_VERSION=0.23.2
+        IMAGE_REGISTRY=ghcr.io/berquerant/daemonjob
+        CACHE_DIR=tmp/cache
+        DOCKER_CACHE_DIR=tmp/cache/docker
+        EOS
