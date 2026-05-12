@@ -6,6 +6,9 @@ inputs:
     default: 'true'
   docker-cache-dir:
     required: false
+  cache-go:
+    required: false
+    default: 'true'
   chart:
     required: false
     default: ''
@@ -15,6 +18,8 @@ runs:
   steps:
     - name: Setup cluster
       uses: ./.github/actions/setup-cluster
+      with:
+        cache-go: ${{ inputs.cache-go }}
     - name: Cache docker local
       id: cache-docker-local
       uses: ./.github/actions/cache-docker-local

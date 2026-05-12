@@ -83,6 +83,7 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          cache-go: false
 
   test-chart:
     needs:
@@ -101,6 +102,7 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          cache-go: false
           chart: ${{ env.CHART }}
 
   release:
