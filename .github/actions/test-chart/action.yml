@@ -8,7 +8,7 @@ runs:
   steps:
     - name: Test chart
       shell: bash
-      run: ./hack/tool.sh helm install -n daemonjob-system --create-namespace my-daemonjob $chart --wait --timeout=2m
+      run: ./hack/tool.sh helm install -n daemonjob-system --create-namespace my-daemonjob $chart --wait --timeout=2m --debug
       env:
         chart: ${{ inputs.chart }}
 
