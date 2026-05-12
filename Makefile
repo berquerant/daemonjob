@@ -1,8 +1,8 @@
 # Determine app version.
-ifeq (,$(DEV))
-VERSION := $(shell ./hack/version.sh)
-else
+ifeq (true,$(DEV))
 VERSION := 0.0.0
+else
+VERSION := $(shell ./hack/version.sh)
 endif
 # Image URL to use all building/pushing image targets.
 IMAGE_TAG := $(VERSION)
