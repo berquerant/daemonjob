@@ -1,0 +1,10 @@
+name: Init
+description: Init
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Env
+      uses: ./.github/actions/setup-env
+    - name: Init
+      shell: bash
+      run: make init
