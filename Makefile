@@ -187,7 +187,7 @@ docker-build: ## Build docker image with the manager.
 ifeq (true,$(SKIP_DOCKER_BUILD))
 	@echo Skip docker-build because SKIP_DOCKER_BUILD is true.
 else
-	IMAGE_TAG=$(IMAGE_TAG) $(CONTAINER_TOOL) buildx bake --set "*.cache-from=type=local,src=$(DOCKER_CACHE_DIR)" --set "*.cache-to=type=local,mode=max,dest=$(DOCKER_CACHE_DIR)" --allow=fs=$(CACHE_DIR)
+	IMAGE_TAG=$(IMAGE_TAG) $(CONTAINER_TOOL) buildx bake --set "*.cache-from=type=local,src=$(DOCKER_CACHE_DIR)" --set "*.cache-to=type=local,mode=max,dest=$(DOCKER_CACHE_DIR)" --allow=fs=$(CACHE_DIR) --load
 endif
 
 .PHONY: docker-push
