@@ -148,9 +148,10 @@ jobs:
           if [ "$prerelease" = "true" ] ; then
             extra_args="${extra_args} --prerelease"
           fi
-          gh release create "$ref" --verify-tag --generate-notes $extra_args "$package_file"
+          gh release create "$ref" --verify-tag --generate-notes $extra_args "$package_file" "$manifest_file"
         env:
           GH_TOKEN: ${{ github.token }}
           ref: ${{ github.ref_name }}
           prerelease: ${{ needs.publish.outputs.prerelease }}
           package_file: ${{ steps.push-chart.outputs.package_file }}
+          manifest_file: manifests/install.yaml
