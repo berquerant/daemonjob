@@ -271,5 +271,9 @@ restart-controller: ## Restart controller deployment.
 
 .PHONY: release
 release: ## Release images, manifest and chart.
+	DEV=false $(MAKE) release-internal
+
+.PHONY: release-internal
+release-internal:
 	git tag "$(VERSION)"
 	git push origin "$(VERSION)"

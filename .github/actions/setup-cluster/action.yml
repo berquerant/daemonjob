@@ -1,15 +1,18 @@
 name: Cluster Setup
 description: Set up cluster
+inputs:
+  cache-go:
+    required: false
+    default: 'true'
 runs:
   using: "composite"
   steps:
-    - name: Setup env
-      uses: ./.github/actions/setup-env
     - name: Init
-      shell: bash
-      run: make init
+      uses: ./.github/actions/setup-init
     - name: Setup go
       uses: ./.github/actions/setup-go
+      with:
+        cache: ${{ inputs.cache-go }}
     - name: Create cluster
       shell: bash
       run: make create-cluster

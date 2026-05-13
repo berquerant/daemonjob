@@ -20,7 +20,7 @@ runs:
       if: ${{ inputs.restore-only != 'true' }}
     - name: Restore docker local cache
       id: cache-docker-local-restore
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: ${{ inputs.path }}
         key: ${{ runner.os }}-docker-${{ hashFiles('Dockerfile', 'broadcast/Dockerfile') }}

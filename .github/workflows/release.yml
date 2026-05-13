@@ -27,16 +27,16 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - name: Setup env
-        uses: ./.github/actions/setup-env
       - name: Init
-        run: make init
+        uses: ./.github/actions/setup-init
       - name: Set version
         id: version
         run: |
           echo "version=$(./hack/version.sh)" >> $GITHUB_OUTPUT
       - name: Setup go
         uses: ./.github/actions/setup-go
+        with:
+          cache: false
       - name: Login to ghcr
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         with:
@@ -83,6 +83,7 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          cache-go: false
 
   test-chart:
     needs:
@@ -101,6 +102,7 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          cache-go: false
           chart: ${{ env.CHART }}
 
   release:
@@ -120,10 +122,8 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: true
-      - name: Setup env
-        uses: ./.github/actions/setup-env
       - name: Init
-        run: make init
+        uses: ./.github/actions/setup-init
       - name: Package the chart
         run: ./hack/tool.sh helm package --destination "$PACKAGE" "$CHART"
       - name: Login to ghcr
@@ -133,12 +133,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push chart
+        id: push-chart
         env:
           package_file: "${PACKAGE}/daemonjob-${{ needs.publish.outputs.version }}.tgz"
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: |
           ./hack/tool.sh helm push $package_file $remote
-          echo package_file=$package_file >> $GITHUB_ENV
+          echo package_file=$package_file >> $GITHUB_OUTPUT
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Create release
@@ -147,8 +148,10 @@ jobs:
           if [ "$prerelease" = "true" ] ; then
             extra_args="${extra_args} --prerelease"
           fi
-          gh release create "$ref" --verify-tag --generate-notes $extra_args "$package_file"
+          gh release create "$ref" --verify-tag --generate-notes $extra_args "$package_file" "$manifest_file"
         env:
           GH_TOKEN: ${{ github.token }}
           ref: ${{ github.ref_name }}
           prerelease: ${{ needs.publish.outputs.prerelease }}
+          package_file: ${{ steps.push-chart.outputs.package_file }}
+          manifest_file: manifests/install.yaml
