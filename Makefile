@@ -31,6 +31,7 @@ GOLANGCI_LINT ?= $(TOOL) golangci-lint
 HELMIFY ?= $(TOOL) helmify
 CLUSTER ?= $(shell pwd)/hack/cluster.sh
 INSTALLER ?= $(shell pwd)/hack/build-installer.sh
+BUILDER ?= $(shell pwd)/hack/build-image.sh
 
 # CONTAINER_TOOL defines the container tool to be used for building images.
 # Be aware that the target commands are only tested with Docker which is
@@ -184,17 +185,7 @@ run: manifests generate fmt vet ## Run a controller from your host.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
 docker-build: ## Build docker image with the manager.
-ifeq (true,$(SKIP_DOCKER_BUILD))
-	@echo Skip docker-build because SKIP_DOCKER_BUILD is true.
-else
-
-ifeq (true,$(DOCKER_CACHE_READONLY))
-	IMAGE_TAG=$(IMAGE_TAG) $(CONTAINER_TOOL) buildx bake --set "*.cache-from=type=local,src=$(DOCKER_CACHE_DIR)" --allow=fs=$(CACHE_DIR) --load
-else
-	IMAGE_TAG=$(IMAGE_TAG) $(CONTAINER_TOOL) buildx bake --set "*.cache-from=type=local,src=$(DOCKER_CACHE_DIR)" --set "*.cache-to=type=local,mode=max,dest=$(DOCKER_CACHE_DIR)" --allow=fs=$(CACHE_DIR) --load
-endif
-
-endif
+	IMAGE_TAG=$(IMAGE_TAG) $(BUILDER)
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
