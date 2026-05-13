@@ -77,7 +77,7 @@ delete_cluster() {
 }
 
 create_cluster() {
-  log "Create cluster..."
+  log "Create cluster ..."
   start_controller
   add_worker 0
 }
@@ -97,7 +97,7 @@ exist_cluster() {
 
 # https://docs.k0sproject.io/head/k0s-in-docker/
 start_controller() {
-  log "Start controller..."
+  log "Start controller ..."
   start --name "$controller_name" --hostname "$controller_name" \
          --read-only \
          -v /var/lib/k0s \
@@ -114,7 +114,7 @@ start_controller() {
 }
 
 stop_controller() {
-  log "Stop controller..."
+  log "Stop controller ..."
   delete "$controller_name" || log "Failed to stop controller or controller is not found"
   log "Controller is stopped!"
 }
@@ -148,7 +148,7 @@ load_image() {
 }
 
 get_token() {
-  log "Acquire a join token for the worker..."
+  log "Acquire a join token for the worker ..."
   docker exec "$controller_name" k0s token create --role=worker
 }
 
@@ -187,7 +187,7 @@ remove_worker() {
   local -r __name="${worker_name_prefix}${__number}"
   log "Drain worker ${__name} ..."
   kubectl drain --ignore-daemonsets --delete-emptydir-data "$__name"
-  log "Delete worker ${__name} from the cluster..."
+  log "Delete worker ${__name} from the cluster ..."
   kubectl delete node "$__name"
   log "Stop worker node ${__name} ..."
   delete "$__name"
