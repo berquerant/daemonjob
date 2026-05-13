@@ -24,6 +24,7 @@ jobs:
     permissions:
       packages: write # for ghcr
       contents: read
+      id-token: write # needed for signing the images with GitHub OIDC Token
     name: Publish
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +42,8 @@ jobs:
         uses: ./.github/actions/setup-go
         with:
           cache: false
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
       - name: Login to ghcr
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         with:
@@ -63,6 +66,7 @@ jobs:
           ref: ${{ github.ref_name }}
       - name: Build and push
         uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
+        id: build-and-push
         with:
           push: true
           sbom: true
@@ -72,6 +76,16 @@ jobs:
           vars: |
             IMAGE_REGISTRY=${{ env.IMAGE_REGISTRY }}
             IMAGE_TAG=${{ steps.version.outputs.version }}
+      - name: Sign the images with GitHub OIDC Token
+        env:
+          METADATA: ${{ steps.build-and-push.outputs.metadata }}
+        run: |
+          set -eo pipefail
+          images="$(mktemp)"
+          echo "$METADATA" |\
+            jq 'to_entries[].value | [.["image.name"], .["containerimage.digest"]] | join("@")' -r |\
+            xargs > "$images"
+          cosign sign --yes "$(cat "$images")"
 
   test-manifest:
     needs:
