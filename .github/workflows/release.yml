@@ -139,8 +139,8 @@ jobs:
           package_file: "${PACKAGE}/daemonjob-${{ needs.publish.outputs.version }}.tgz"
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: |
-          ./hack/tool.sh helm push $package_file $remote
-          echo package_file=$package_file >> $GITHUB_OUTPUT
+          ./hack/tool.sh helm push "$package_file" "$remote"
+          echo "package_file=${package_file}" >> $GITHUB_OUTPUT
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Create release
