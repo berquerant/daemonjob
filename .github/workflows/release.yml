@@ -107,6 +107,7 @@ jobs:
 
   release:
     needs:
+      - publish
       - test-manifest
       - test-chart
     timeout-minutes: 30
