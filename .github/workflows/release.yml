@@ -13,7 +13,6 @@ concurrency:
 
 env:
   KUBECONFIG: "${{ github.workspace }}/tmp/.kubeconfig"
-  CHART: "./charts/daemonjob"
 
 jobs:
   init:
@@ -101,7 +100,7 @@ jobs:
       matrix:
         chart:
           - ""
-          - ${{ env.CHART }}
+          - ./charts/daemonjob
     steps:
       - name: Clone the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -137,7 +136,7 @@ jobs:
       - name: Package the chart
         id: package-chart
         run: |
-          ./hack/tool.sh helm package --destination "$PACKAGE" "$CHART"
+          ./hack/tool.sh helm package --destination "$PACKAGE" "./charts/daemonjob"
           echo "package_file=${PACKAGE}/daemonjob-${{ needs.init.outputs.version }}.tgz" >> $GITHUB_OUTPUT
       - name: Login to ghcr
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
