@@ -72,6 +72,8 @@ jobs:
           no-cache: true
           sbom: true
           provenance: true
+          set: |
+            *.platform=linux/arm64,linux/amd64
         env:
           IMAGE_TAG: ${{ steps.version.outputs.version }}
       - name: Sign the images with GitHub OIDC Token
