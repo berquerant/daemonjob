@@ -69,10 +69,9 @@ jobs:
         id: build-and-push
         with:
           push: true
+          no-cache: true
           sbom: true
           provenance: true
-          set: |
-            --no-cache
           vars: |
             IMAGE_REGISTRY=${{ env.IMAGE_REGISTRY }}
             IMAGE_TAG=${{ steps.version.outputs.version }}
