@@ -72,9 +72,8 @@ jobs:
           no-cache: true
           sbom: true
           provenance: true
-          vars: |
-            IMAGE_REGISTRY=${{ env.IMAGE_REGISTRY }}
-            IMAGE_TAG=${{ steps.version.outputs.version }}
+        env:
+          IMAGE_TAG: ${{ steps.version.outputs.version }}
       - name: Sign the images with GitHub OIDC Token
         env:
           METADATA: ${{ steps.build-and-push.outputs.metadata }}
