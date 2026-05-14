@@ -5,11 +5,11 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/berquerant/daemonjob/manager
-  newTag: 0.0.1-alpha.3
+  newTag: 0.0.1-alpha.4
 configMapGenerator:
 - literals:
   - BROADCAST_IMAGE_REPOSITORY=ghcr.io/berquerant/daemonjob/broadcast
-  - BROADCAST_IMAGE_TAG=0.0.1-alpha.3
+  - BROADCAST_IMAGE_TAG=0.0.1-alpha.4
   - BROADCAST_ROLE=daemonjob-broadcast-role
   name: controller-manager
   options:
