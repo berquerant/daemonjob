@@ -39,6 +39,7 @@ runs:
     - name: Load images
       shell: bash
       run: make load
+      if: ${{ inputs.build-images == 'true' }}
     - name: Test manifest
       uses: ./.github/actions/test-manifest
       if: ${{ inputs.chart == '' }}
