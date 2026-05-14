@@ -21,6 +21,7 @@ runs:
       env:
         IMAGE_TAG: ${{ inputs.version }}
     - name: Sign the images with GitHub OIDC Token
+      shell: bash
       env:
         METADATA: ${{ steps.build-and-push.outputs.metadata }}
       run: |
