@@ -31157,7 +31157,7 @@ subjects:
 apiVersion: v1
 data:
   BROADCAST_IMAGE_REPOSITORY: ghcr.io/berquerant/daemonjob/broadcast
-  BROADCAST_IMAGE_TAG: 0.0.1-alpha.9
+  BROADCAST_IMAGE_TAG: 0.0.1-alpha.10
   BROADCAST_ROLE: daemonjob-broadcast-role
 kind: ConfigMap
 metadata:
@@ -31217,7 +31217,7 @@ spec:
         envFrom:
         - configMapRef:
             name: daemonjob-controller-manager
-        image: ghcr.io/berquerant/daemonjob/manager:0.0.1-alpha.9
+        image: ghcr.io/berquerant/daemonjob/manager:0.0.1-alpha.10
         livenessProbe:
           httpGet:
             path: /healthz
