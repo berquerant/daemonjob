@@ -16,16 +16,14 @@ env:
   CHART: "./charts/daemonjob"
 
 jobs:
-  publish:
+  init:
     outputs:
       prerelease: ${{ steps.check.outputs.prerelease }}
       version: ${{ steps.version.outputs.version }}
     timeout-minutes: 30
     permissions:
-      packages: write # for ghcr
       contents: read
-      id-token: write # needed for signing the images with GitHub OIDC Token
-    name: Publish
+    name: InitRelease
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
@@ -38,20 +36,6 @@ jobs:
         id: version
         run: |
           echo "version=$(./hack/version.sh)" >> $GITHUB_OUTPUT
-      - name: Setup go
-        uses: ./.github/actions/setup-go
-        with:
-          cache: false
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
-      - name: Login to ghcr
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup buildx
-        uses: ./.github/actions/setup-buildx
       - name: Check prerelease
         id: check
         run: |
@@ -64,37 +48,60 @@ jobs:
           fi
         env:
           ref: ${{ github.ref_name }}
+
+  publish:
+    needs:
+      - init
+    timeout-minutes: 30
+    permissions:
+      packages: write # for ghcr
+      contents: read
+      id-token: write # needed for signing the images with GitHub OIDC Token
+    name: Publish
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Init
+        uses: ./.github/actions/setup-init
+      - name: Setup go
+        uses: ./.github/actions/setup-go
+        with:
+          cache: false
+      - name: Login to ghcr
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup buildx
+        uses: ./.github/actions/setup-buildx
       - name: Build and push
-        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
-        id: build-and-push
+        uses: ./.github/actions/build-and-push
         with:
-          push: true
-          no-cache: true
-          sbom: true
-          provenance: true
-          set: |
-            *.platform=linux/arm64,linux/amd64
-        env:
-          IMAGE_TAG: ${{ steps.version.outputs.version }}
-      - name: Sign the images with GitHub OIDC Token
-        env:
-          METADATA: ${{ steps.build-and-push.outputs.metadata }}
-        run: |
-          set -eo pipefail
-          images="$(mktemp)"
-          echo "$METADATA" |\
-            jq 'to_entries[].value | [(.["image.name"] | split(":")[0]), .["containerimage.digest"]] | join("@")' -r |\
-            xargs > "$images"
-          cosign sign --yes $(cat "$images")
+          version: ${{ needs.init.outputs.version }}
+          platform: ${{ matrix.platform }}
 
-  test-manifest:
+  test-installer:
     needs:
       - publish
     timeout-minutes: 30
     permissions:
       contents: read
-    name: Test manifest
+    name: Test Installer before Release
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart:
+          - ""
+          - ${{ env.CHART }}
     steps:
       - name: Clone the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -105,32 +112,13 @@ jobs:
         with:
           build-images: false
           cache-go: false
-
-  test-chart:
-    needs:
-      - publish
-    timeout-minutes: 30
-    permissions:
-      contents: read
-    name: Test chart
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-      - name: Test installer
-        uses: ./.github/actions/test-installer
-        with:
-          build-images: false
-          cache-go: false
-          chart: ${{ env.CHART }}
+          chart: ${{ matrix.chart }}
 
   release:
     needs:
+      - init
       - publish
-      - test-manifest
-      - test-chart
+      - test-installer
     timeout-minutes: 30
     permissions:
       packages: write # for ghcr
@@ -157,7 +145,7 @@ jobs:
       - name: Push chart
         id: push-chart
         env:
-          package_file: "${PACKAGE}/daemonjob-${{ needs.publish.outputs.version }}.tgz"
+          package_file: "${PACKAGE}/daemonjob-${{ needs.init.outputs.version }}.tgz"
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: |
           ./hack/tool.sh helm push "$package_file" "$remote"
@@ -174,6 +162,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           ref: ${{ github.ref_name }}
-          prerelease: ${{ needs.publish.outputs.prerelease }}
+          prerelease: ${{ needs.init.outputs.prerelease }}
           package_file: ${{ steps.push-chart.outputs.package_file }}
           manifest_file: manifests/install.yaml
