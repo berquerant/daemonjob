@@ -193,10 +193,18 @@ docker-push: ## Push docker image with the manager.
 
 .PHONY: build-installer
 build-installer: manifests generate ## Generate a consolidated YAML with CRDs and deployment.
+	DEV=false $(MAKE) build-installer-internal
+
+.PHONY: build-installer-internal
+build-installer-internal:
 	$(INSTALLER) manifest
 
 .PHONY: chart
 chart: build-installer ## Generate Helm charts. See https://github.com/arttor/helmify
+	DEV=false $(MAKE) chart-internal
+
+.PHONY: chart-internal
+chart-internal:
 	$(INSTALLER) chart $(VERSION)
 
 ##@ Deployment

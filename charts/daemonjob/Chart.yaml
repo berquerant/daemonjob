@@ -2,8 +2,8 @@ apiVersion: v2
 name: daemonjob
 description: Provides Job CRDs for managing cluster-wide node-local workloads
 type: application
-version: "0.0.1-alpha.0"
-appVersion: "0.0.1-alpha.0"
+version: "0.0.1-alpha.3"
+appVersion: "0.0.1-alpha.3"
 kubeVersion: ">= 1.35.0-0"
 keywords:
   - jobs
