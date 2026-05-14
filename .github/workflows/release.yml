@@ -83,7 +83,7 @@ jobs:
           echo "$METADATA" |\
             jq 'to_entries[].value | [(.["image.name"] | split(":")[0]), .["containerimage.digest"]] | join("@")' -r |\
             xargs > "$images"
-          cosign sign --yes "$(cat "$images")"
+          cosign sign --yes $(cat "$images")
 
   test-manifest:
     needs:
