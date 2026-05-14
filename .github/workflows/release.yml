@@ -82,6 +82,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup buildx
         uses: ./.github/actions/setup-buildx
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
       - name: Build and push
         uses: ./.github/actions/build-and-push
         with:
