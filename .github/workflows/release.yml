@@ -131,7 +131,7 @@ jobs:
         run: |
           image_name="${{ env.IMAGE_REGISTRY }}/${{ matrix.name }}"
           image="${image_name}:${tag}"
-          docker buildx imagetools create -t "$image" "${image}-arm" "${image}-amd"
+          docker buildx imagetools create -t "$image" "${image}-arm64" "${image}-amd64"
           get_digest() {
             docker buildx imagetools inspect "$image" --format='{{json .Manifest.Digest}}' | tr -d '"'
           }
