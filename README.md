@@ -32,13 +32,13 @@ A high-granularity scheduler that deploys individual CronJobs to each node, allo
 #### [Using the installer](manifests/install.yaml)
 
 ```sh
-kubectl apply -f https://raw.githubusercontent.com/github.com/berquerant/daemonjob/<tag or branch>/manifests/install.yaml
+kubectl apply -n daemonjob-system --server-side=true -f https://raw.githubusercontent.com/github.com/berquerant/daemonjob/<tag or branch>/manifests/install.yaml
 ```
 
 #### [Using Helm](charts/daemonjob)
 
 ``` sh
-helm install oci://ghcr.io/berquerant/daemonjob/charts/daemonjob/daemonjob
+helm install -n daemonjob-system --create-namespace oci://ghcr.io/berquerant/daemonjob/charts/daemonjob/daemonjob
 ```
 
 ### Documentation
