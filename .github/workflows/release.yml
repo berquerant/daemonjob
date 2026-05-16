@@ -136,7 +136,7 @@ jobs:
             docker buildx imagetools inspect "$image" --format='{{json .Manifest.Digest}}' | tr -d '"'
           }
           digest="$(get_digest)"
-          cosign sign --yes "${image_name}:${digest}"
+          cosign sign --yes "${image_name}@${digest}"
 
   test-installer:
     needs:
