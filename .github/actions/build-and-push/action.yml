@@ -3,7 +3,7 @@ description: Build and Push
 inputs:
   version:
     required: true
-  platform:
+  arch:
     required: true
 runs:
   using: "composite"
@@ -17,9 +17,9 @@ runs:
         sbom: true
         provenance: true
         set: |
-          *.platform=${{ inputs.platform }}
+          *.platform=linux/${{ inputs.arch }}
       env:
-        IMAGE_TAG: ${{ inputs.version }}
+        IMAGE_TAG: ${{ inputs.version }}-${{ inputs.arch }}
     - name: Sign the images with GitHub OIDC Token
       shell: bash
       env:
