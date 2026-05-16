@@ -38,7 +38,7 @@ kubectl apply -f https://raw.githubusercontent.com/github.com/berquerant/daemonj
 #### [Using Helm](charts/daemonjob)
 
 ``` sh
-helm install oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
+helm install oci://ghcr.io/berquerant/daemonjob/charts/daemonjob/daemonjob
 ```
 
 ### Documentation
