@@ -23,6 +23,10 @@ tool() {
   "${topd}/hack/tool.sh" "$@"
 }
 
+yq() {
+  tool yq "$@"
+}
+
 kustomize() {
   tool kustomize "$@"
 }
@@ -75,11 +79,31 @@ generate_values_schema() {
   popd > /dev/null
 }
 
+set_values_broadcast_role_empty() {
+  pushd "$chart" > /dev/null
+  local __tmp
+  __tmp="$(mktemp)"
+  yq '.controllerManager.broadcastRole = ""' values.yaml > "$__tmp"
+  cat "$__tmp" > values.yaml
+  popd > /dev/null
+}
+
+fix_controller_manager_broadcast_role() {
+  pushd "$chart" > /dev/null
+  local __tmp
+  __tmp="$(mktemp)"
+  sed -E 's/BROADCAST_ROLE: .+/BROADCAST_ROLE: {{ default (printf "%s-broadcast-role" (include "daemonjob.fullname" . )) .Values.controllerManager.broadcastRole | quote }}/' templates/controller-manager.yaml > "$__tmp"
+  cat "$__tmp" > templates/controller-manager.yaml
+  popd > /dev/null
+}
+
 build_chart() {
   local -r __version="$1"
   rm -rf "$chart_dir"
   helmify "$chart" < "$manifest"
   generate_chart_yaml "$__version" > "$chart_yaml"
+  set_values_broadcast_role_empty
+  fix_controller_manager_broadcast_role
   generate_values_schema
   helm lint --strict "$chart"
 }

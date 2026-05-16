@@ -73,6 +73,7 @@ if [[ ! -x "$bin" ]] ; then
     "crd-ref-docs") setup_go "$CRD_REF_DOCS_VERSION" ;;
     "helm") setup "$HELM_VERSION" ;;
     "helm-schema") setup_go "$HELM_SCHEMA_VERSION" ;;
+    "yq") setup "$YQ_VERSION" ;;
     *)
       log "Unknown tool!: ${name}"
       exit 1

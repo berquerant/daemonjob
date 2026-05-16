@@ -8,4 +8,4 @@ data:
   BROADCAST_IMAGE_REPOSITORY: {{ .Values.controllerManager.broadcastImageRepository
     | quote }}
   BROADCAST_IMAGE_TAG: {{ .Values.controllerManager.broadcastImageTag | quote }}
-  BROADCAST_ROLE: {{ .Values.controllerManager.broadcastRole | quote }}
+  BROADCAST_ROLE: {{ default (printf "%s-broadcast-role" (include "daemonjob.fullname" . )) .Values.controllerManager.broadcastRole | quote }}

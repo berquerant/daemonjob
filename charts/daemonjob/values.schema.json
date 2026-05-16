@@ -16,7 +16,7 @@
           "type": "string"
         },
         "broadcastRole": {
-          "default": "daemonjob-broadcast-role",
+          "default": "",
           "title": "broadcastRole",
           "type": "string"
         },

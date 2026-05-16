@@ -17,6 +17,7 @@ runs:
         CRD_REF_DOCS_VERSION=v0.3.0
         HELM_VERSION=v4.1.4
         HELM_SCHEMA_VERSION=0.23.2
+        YQ_VERSION=v4.53.2
         IMAGE_REGISTRY=ghcr.io/berquerant/daemonjob
         CACHE_DIR=tmp/cache
         DOCKER_CACHE_DIR=tmp/cache/docker
