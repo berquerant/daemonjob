@@ -34,8 +34,11 @@ import (
 	. "github.com/onsi/ginkgo/v2" // nolint:revive,staticcheck
 )
 
+var (
+	certmanagerVersion = os.Getenv("CERTMANAGER_VERSION")
+)
+
 const (
-	certmanagerVersion = "v1.20.2"
 	certmanagerURLTmpl = "https://github.com/cert-manager/cert-manager/releases/download/%s/cert-manager.yaml"
 )
 
