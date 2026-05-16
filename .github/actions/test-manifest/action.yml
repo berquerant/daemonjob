@@ -9,4 +9,10 @@ runs:
     - name: Wait until daemonjob-controller-manager is available
       shell: bash
       run: ./hack/tool.sh kubectl -n daemonjob-system wait --for=condition=available --timeout=5m deployment/daemonjob-controller-manager
+    - name: Apply samples
+      shell: bash
+      run: ./hack/tool.sh kubectl apply -k config/samples
+    - name: Wait until the DaemonJob is complete
+      shell: bash
+      run: ./hack/tool.sh kubectl wait --for=jsonpath='{.status.state}'=Complete daemonjob daemonjob-sample
 
