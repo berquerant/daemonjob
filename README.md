@@ -32,7 +32,7 @@ A high-granularity scheduler that deploys individual CronJobs to each node, allo
 #### [Using the installer](manifests/install.yaml)
 
 ```sh
-kubectl apply -n daemonjob-system --server-side=true -f https://raw.githubusercontent.com/github.com/berquerant/daemonjob/<tag or branch>/manifests/install.yaml
+kubectl apply -n daemonjob-system --server-side=true -f https://raw.githubusercontent.com/berquerant/daemonjob/refs/tags/<tag>/manifests/install.yaml
 ```
 
 #### [Using Helm](charts/daemonjob)
