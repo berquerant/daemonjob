@@ -77,7 +77,7 @@
       "matchStrings": [
         "K0S_VERSION=(?<currentValue>.*)"
       ],
-      "datasourceTemplate": "github-releases",
+      "datasourceTemplate": "docker",
       "depNameTemplate": "k0sproject/k0s"
     },
     {
