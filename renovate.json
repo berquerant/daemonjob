@@ -61,13 +61,26 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^.github/actions/setup-env/action.yml$/"
+        "/^.github/actions/setup-env/action.yml$/",
+        "/^.custom-gcl.yml$/"
       ],
       "matchStrings": [
-        "GOLANGCI_LINT_VERSION=(?<currentValue>.*)"
+        "GOLANGCI_LINT_VERSION=(?<currentValue>.*)",
+        "# GOLANGCI_LINT\\s+version: (?<currentValue>.*)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "golangci/golangci-lint"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^.custom-gcl.yml$/"
+      ],
+      "matchStrings": [
+        "import: \"sigs.k8s.io/logtools/logcheck/gclplugin\"\\s+version: (?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "sigs.k8s.io/logtools"
     },
     {
       "customType": "regex",

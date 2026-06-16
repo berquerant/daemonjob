@@ -3,6 +3,7 @@
 # with all the plugins listed below.
 #
 # See: https://golangci-lint.run/plugins/module-plugins/
+# GOLANGCI_LINT
 version: v2.11.4
 destination: ./bin
 plugins:
