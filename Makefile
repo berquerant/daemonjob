@@ -131,7 +131,11 @@ golangci-lint-fix: golangci-lint-config ## Run golangci-lint linter and perform 
 golangci-lint-config: ## Verify golangci-lint linter configuration.
 	$(GOLANGCI_LINT) config verify
 
-LINT_TASKS := vet go-fix golangci-lint check-licenses
+.PHONY: shellcheck
+shellcheck: ## Run shellcheck.
+	./hack/shellcheck.sh
+
+LINT_TASKS := vet go-fix golangci-lint check-licenses shellcheck
 
 .PHONY: lint
 lint: ## Run linters.

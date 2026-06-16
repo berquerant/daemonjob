@@ -25,8 +25,7 @@ readonly tmpd="${topd}/tmp"
 case "$name" in
   "clean")
     log "Clean all binaries"
-    rm -rf "$bind"
-    sudo rm -rf "${bind}/k8s"
+    find "$bind" -type f -maxdepth 1 -delete
     exit
     ;;
 esac
@@ -74,6 +73,7 @@ if [[ ! -x "$bin" ]] ; then
     "helm") setup "$HELM_VERSION" ;;
     "helm-schema") setup_go "$HELM_SCHEMA_VERSION" ;;
     "yq") setup "$YQ_VERSION" ;;
+    "shellcheck") setup "$SHELLCHECK_VERSION" ;;
     *)
       log "Unknown tool!: ${name}"
       exit 1

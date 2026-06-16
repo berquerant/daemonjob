@@ -51,6 +51,10 @@ get_arch() {
   arch | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/'
 }
 
+get_arch2() {
+  arch | sed -e 's/arm64/aarch64/'
+}
+
 install_binary() {
   local -r __bin="$1"
   mv "${__bin}" "$dest"
@@ -74,12 +78,19 @@ install_yq() {
   install_binary "yq_$(get_osname)_$(get_arch)"
 }
 
+install_shellcheck() {
+  curl -L -s -o shellcheck.tar.gz "https://github.com/koalaman/shellcheck/releases/download/${version}/shellcheck-${version}.$(get_osname).$(get_arch2).tar.gz"
+  tar xzf shellcheck.tar.gz
+  install_binary "shellcheck-${version}/shellcheck"
+}
+
 case "$name" in
   "kubectl")
     download_and_install "https://dl.k8s.io/release/${version}/bin/$(get_osname)/$(get_arch)/kubectl"
     ;;
   "helm") install_helm ;;
   "yq") install_yq ;;
+  "shellcheck") install_shellcheck ;;
   *)
     log "unknown tool!: ${name}"
     exit 1
