@@ -278,5 +278,5 @@ release: ## Release images, manifest and chart.
 
 .PHONY: release-internal
 release-internal:
-	git tag "v$(VERSION)"
+	git tag -a -m "Version $(VERSION)" "v$(VERSION)"
 	git push origin "v$(VERSION)"

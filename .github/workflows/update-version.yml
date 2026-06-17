@@ -1,0 +1,92 @@
+name: Create Update Version PR
+
+permissions: {}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'semver to release'
+        required: true
+        type: string
+
+jobs:
+  create-pr:
+    name: Create PR
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate SemVer format
+        env:
+          VERSION: ${{ inputs.version }}
+        # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+        run: |
+          if ! echo "$VERSION" | grep -qE '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' ; then
+            echo "inputs.version is invalid!"
+            exit 1
+          fi
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Init
+        uses: ./.github/actions/setup-init
+      - name: Validate duplicate tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          check() {
+            git rev-parse "refs/tags/$1" >/dev/null 2>&1
+          }
+          if check "$VERSION" || check "v${VERSION}" ; then
+            echo "inputs.version is already exist"
+            exit 1
+          fi
+      - name: Setup go
+        uses: ./.github/actions/setup-go
+        with:
+          cache: false
+      - name: Update VERSION file
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          echo "$VERSION" > VERSION
+      - name: Update manifests and charts
+        run: make chart
+      - name: Create branch
+        id: create-branch
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          # https://github.com/orgs/community/discussions/26560
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          short_sha="$(git rev-parse --short HEAD)"
+          branch="update-version/${VERSION}-${short_sha}"
+          message="Update version to ${VERSION}"
+          echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+          echo "message=${message}" >> "$GITHUB_OUTPUT"
+          git switch -c "$branch"
+          git add VERSION charts config manifests
+          git commit -m "$message"
+          git push origin "$branch"
+      - name: Create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: ${{ steps.create-branch.message }}
+          BRANCH: ${{ steps.create-branch.branch }}
+        run: |
+          # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
+          workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          body="Created by ${workflow_url} from ${GITHUB_REF_NAME}"
+          gh pr craete \
+            --title "$TITLE" \
+            --head "$BRANCH" \
+            --base main \
+            --assignee "$GITHUB_ACTOR" \
+            --body "$body"

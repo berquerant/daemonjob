@@ -1,0 +1,60 @@
+name: Trigger Release
+
+permissions: {}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger-release:
+    name: Trigger Release
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Init
+        uses: ./.github/actions/setup-init
+      - name: Read Version
+        id: read-version
+        run:
+          echo "version=$(./hack/version.sh)" >> "$GITHUB_OUTPUT"
+      - name: Validate SemVer format
+        env:
+          VERSION: "${{ steps.read-version.outputs.version }}"
+        # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+        run: |
+          if ! echo "$VERSION" | grep -qE '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' ; then
+            echo "inputs.version is invalid!"
+            exit 1
+          fi
+      - name: Validate duplicate tag
+        env:
+          VERSION: "${{ steps.raed-version.outputs.version }}"
+        run: |
+          check() {
+            git rev-parse "refs/tags/$1" >/dev/null 2>&1
+          }
+          if check "$VERSION" || check "v${VERSION}" ; then
+            echo "inputs.version is already exist"
+            exit 1
+          fi
+      - name: Confirm no diffs
+        run: |
+          make chart
+          if ! git diff --exit-code ; then
+            echo "make chart should not make changes"
+            exit 1
+          fi
+      - name: Create tag
+        run: |
+          # https://github.com/orgs/community/discussions/26560
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          make release
