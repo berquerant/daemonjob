@@ -15,8 +15,8 @@ jobs:
     name: Create PR
     timeout-minutes: 10
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # create branch
+      pull-requests: write # create PR
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
