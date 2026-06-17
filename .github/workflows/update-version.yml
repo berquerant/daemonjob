@@ -19,15 +19,6 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: Validate SemVer format
-        env:
-          VERSION: ${{ inputs.version }}
-        # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-        run: |
-          if ! echo "$VERSION" | grep -qE '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' ; then
-            echo "inputs.version (${VERSION}) is invalid!"
-            exit 1
-          fi
       - name: Clone the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -35,17 +26,10 @@ jobs:
           fetch-depth: 0
       - name: Init
         uses: ./.github/actions/setup-init
-      - name: Validate duplicate tag
+      - name: Validate inputs
         env:
           VERSION: ${{ inputs.version }}
-        run: |
-          check() {
-            git rev-parse "refs/tags/$1" >/dev/null 2>&1
-          }
-          if check "$VERSION" || check "v${VERSION}" ; then
-            echo "inputs.version (${VERSION} or v${VERSION}) is already exist"
-            exit 1
-          fi
+        run: ./hack/validate-version.sh "$VERSION"
       - name: Setup go
         uses: ./.github/actions/setup-go
         with:
