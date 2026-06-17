@@ -25,7 +25,7 @@ jobs:
         # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
         run: |
           if ! echo "$VERSION" | grep -qE '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' ; then
-            echo "inputs.version is invalid!"
+            echo "inputs.version (${VERSION}) is invalid!"
             exit 1
           fi
       - name: Clone the code
@@ -43,7 +43,7 @@ jobs:
             git rev-parse "refs/tags/$1" >/dev/null 2>&1
           }
           if check "$VERSION" || check "v${VERSION}" ; then
-            echo "inputs.version is already exist"
+            echo "inputs.version (${VERSION} or v${VERSION}) is already exist"
             exit 1
           fi
       - name: Setup go
