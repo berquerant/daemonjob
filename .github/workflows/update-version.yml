@@ -62,8 +62,8 @@ jobs:
       - name: Create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TITLE: ${{ steps.create-branch.message }}
-          BRANCH: ${{ steps.create-branch.branch }}
+          TITLE: ${{ steps.create-branch.outputs.message }}
+          BRANCH: ${{ steps.create-branch.outputs.branch }}
         run: |
           # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
           workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
