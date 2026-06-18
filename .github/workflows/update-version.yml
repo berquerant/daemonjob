@@ -68,7 +68,7 @@ jobs:
           # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
           workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           body="Created by ${workflow_url} from ${GITHUB_REF_NAME}"
-          gh pr craete \
+          gh pr create \
             --title "$TITLE" \
             --head "$BRANCH" \
             --base main \
