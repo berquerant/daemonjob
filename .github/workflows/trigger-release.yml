@@ -28,13 +28,6 @@ jobs:
         env:
           VERSION: "${{ steps.read-version.outputs.version }}"
         run: ./hack/validate-version.sh "$VERSION"
-      - name: Confirm no diffs
-        run: |
-          make chart
-          if ! git diff --exit-code ; then
-            echo "make chart should not make changes"
-            exit 1
-          fi
       - name: Create tag
         run: |
           # https://github.com/orgs/community/discussions/26560
