@@ -67,7 +67,9 @@ jobs:
         run: |
           # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
           workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          body="Created by ${workflow_url} from ${GITHUB_REF_NAME}"
+          sha="$(git rev-parse HEAD)"
+          commit_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/${sha}"
+          body="Created by ${workflow_url} from ${commit_url}"
           gh pr create \
             --title "$TITLE" \
             --head "$BRANCH" \
