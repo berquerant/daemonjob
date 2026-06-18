@@ -27,7 +27,7 @@ jobs:
       - name: Validate SemVer format
         env:
           VERSION: "${{ steps.read-version.outputs.version }}"
-        run: ./hack/validate-version
+        run: ./hack/validate-version.sh "$VERSION"
       - name: Confirm no diffs
         run: |
           make chart
