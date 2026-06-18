@@ -51,8 +51,10 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           short_sha="$(git rev-parse --short HEAD)"
+          sha="$(git rev-parse HEAD)"
           branch="update-version/${VERSION}-${short_sha}"
           message="Update version to ${VERSION}"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
           echo "message=${message}" >> "$GITHUB_OUTPUT"
           git switch -c "$branch"
@@ -64,11 +66,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TITLE: ${{ steps.create-branch.outputs.message }}
           BRANCH: ${{ steps.create-branch.outputs.branch }}
+          SHA: ${{ steps.create-branch.outputs.sha }}
         run: |
           # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
           workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          sha="$(git rev-parse HEAD)"
-          commit_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/${sha}"
+          commit_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/${SHA}"
           body="Created by ${workflow_url} from ${commit_url}"
           gh pr create \
             --title "$TITLE" \
