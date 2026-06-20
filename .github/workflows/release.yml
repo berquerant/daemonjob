@@ -128,8 +128,8 @@ jobs:
       - name: Create manifest
         env:
           tag: "${{ needs.init.outputs.version }}"
+          image_name: "${{ env.IMAGE_REGISTRY }}/${{ matrix.name }}"
         run: |
-          image_name="${{ env.IMAGE_REGISTRY }}/${{ matrix.name }}"
           image="${image_name}:${tag}"
           docker buildx imagetools create -t "$image" "${image}-arm64" "${image}-amd64"
           get_digest() {
@@ -187,9 +187,11 @@ jobs:
         uses: ./.github/actions/setup-init
       - name: Package the chart
         id: package-chart
+        env:
+          version: ${{ needs.init.outputs.version }}
         run: |
           ./hack/tool.sh helm package --destination "$PACKAGE" "./charts/daemonjob"
-          echo "package_file=${PACKAGE}/daemonjob-${{ needs.init.outputs.version }}.tgz" >> $GITHUB_OUTPUT
+          echo "package_file=${PACKAGE}/daemonjob-${version}.tgz" >> $GITHUB_OUTPUT
       - name: Login to ghcr
         uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
