@@ -160,6 +160,7 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          load-images: false
           cache-go: false
           chart: ${{ matrix.chart }}
 

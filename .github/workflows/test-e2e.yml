@@ -65,5 +65,6 @@ jobs:
         uses: ./.github/actions/test-installer
         with:
           build-images: true
+          load-images: true
           docker-cache-dir: ${{ env.DOCKER_CACHE_DIR }}
           chart: ${{ matrix.chart }}

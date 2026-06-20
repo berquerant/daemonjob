@@ -4,6 +4,9 @@ inputs:
   build-images:
     required: false
     default: 'true'
+  load-images:
+    required: false
+    default: 'true'
   docker-cache-dir:
     required: false
   cache-go:
@@ -30,22 +33,19 @@ runs:
     - name: Setup buildx
       uses: ./.github/actions/setup-buildx
       if: ${{ inputs.build-images == 'true' }}
-    - name: Build images
-      shell: bash
-      run: make docker-build
-      env:
-        DOCKER_CACHE_READONLY: "true"
-      if: ${{ inputs.build-images == 'true' }}
-    - name: Load images
-      shell: bash
-      run: make load
-      if: ${{ inputs.build-images == 'true' }}
     - name: Test manifest
-      uses: ./.github/actions/test-manifest
+      shell: bash
       if: ${{ inputs.chart == '' }}
+      env:
+        SKIP_DOCKER_BUILD: ${{ inputs.build-images != 'true' }}
+        SKIP_LOAD_IMAGE: ${{ inputs.load-images != 'true' }}
+      run: make test-manifest
     - name: Test chart
-      uses: ./.github/actions/test-chart
-      with:
-        chart: ${{ inputs.chart }}
+      shell: bash
       if: ${{ inputs.chart != '' }}
+      env:
+        SKIP_DOCKER_BUILD: ${{ inputs.build-images != 'true' }}
+        SKIP_LOAD_IMAGE: ${{ inputs.load-images != 'true' }}
+        CHART: ${{ inputs.chart }}
+      run: make test-chart
 
