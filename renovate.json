@@ -3,63 +3,44 @@
   "baseBranchPatterns": [
     "main"
   ],
-  "extends": [
-    "github>berquerant/renovate-config"
-  ],
-  "postUpdateOptions": [
-    "gomodTidy"
-  ],
-  "lockFileMaintenance": {
-    "enabled": true
-  },
-  "packageRules": [
-    {
-      "description": "Group go dependencies",
-      "groupName": "go({{updateType}})",
-      "addLabels": [
-        "go"
-      ],
-      "matchDatasources": [
-        "go"
-      ]
-    }
-  ],
   "customManagers": [
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes/kubernetes",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "KUBECTL_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes/kubernetes"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes-sigs/controller-tools",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "CONTROLLER_GEN_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes-sigs/controller-tools"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes-sigs/kustomize",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "KUSTOMIZE_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes-sigs/kustomize"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "golangci/golangci-lint",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/",
         "/^.custom-gcl.yml$/"
@@ -67,119 +48,158 @@
       "matchStrings": [
         "GOLANGCI_LINT_VERSION=(?<currentValue>.*)",
         "# GOLANGCI_LINT\\s+version: (?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "golangci/golangci-lint"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes-sigs/logtools",
       "managerFilePatterns": [
         "/^.custom-gcl.yml$/"
       ],
       "matchStrings": [
         "import: \"sigs.k8s.io/logtools/logcheck/gclplugin\"\\s+version: (?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes-sigs/logtools"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "k0sproject/k0s",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "K0S_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "k0sproject/k0s"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "google/go-licenses",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "GO_LICENSES_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "google/go-licenses"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "arttor/helmify",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "HELMIFY_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "arttor/helmify"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "elastic/crd-ref-docs",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "CRD_REF_DOCS_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "elastic/crd-ref-docs"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "helm/helm",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "HELM_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "helm/helm"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "dadav/helm-schema",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "HELM_SCHEMA_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "dadav/helm-schema"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mikefarah/yq",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "YQ_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "mikefarah/yq"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cert-manager/cert-manager",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "CERTMANAGER_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "cert-manager/cert-manager"
+      ]
     },
     {
       "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "koalaman/shellcheck",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
       ],
       "matchStrings": [
         "SHELLCHECK_VERSION=(?<currentValue>.*)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "koalaman/shellcheck"
+      ]
     }
+  ],
+  "extends": [
+    "github>berquerant/renovate-config"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "automerge": true,
+      "matchUpdateTypes": [
+        "patch"
+      ]
+    },
+    {
+      "automerge": true,
+      "matchDepNames": [
+        "golangci/golangci-lint",
+        "kubernetes-sigs/logtools",
+        "google/go-licenses",
+        "mikefarah/yq",
+        "koalaman/shellcheck"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ]
+    },
+    {
+      "addLabels": [
+        "go"
+      ],
+      "description": "Group go dependencies",
+      "groupName": "go({{updateType}})",
+      "matchDatasources": [
+        "go"
+      ]
+    }
+  ],
+  "platformAutomerge": true,
+  "postUpdateOptions": [
+    "gomodTidy"
   ]
 }
