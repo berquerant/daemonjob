@@ -181,7 +181,8 @@ jobs:
       - name: Clone the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          persist-credentials: true
+          persist-credentials: false
+          fetch-depth: 0
       - name: Init
         uses: ./.github/actions/setup-init
       - name: Package the chart
@@ -200,8 +201,6 @@ jobs:
           package_file: ${{ steps.package-chart.outputs.package_file }}
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: ./hack/tool.sh helm push "$package_file" "$remote"
-      - name: Fetch history
-        run: git fetch --prune --unshallow
       - name: Create release
         run: |
           extra_args=""
