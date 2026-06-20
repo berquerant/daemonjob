@@ -29,6 +29,7 @@ CONTROLLER_GEN ?= $(TOOL) controller-gen
 ENVTEST ?= $(TOOL) setup-envtest
 GOLANGCI_LINT ?= $(TOOL) golangci-lint
 HELMIFY ?= $(TOOL) helmify
+HELM ?= $(TOOL) helm
 CLUSTER ?= $(shell pwd)/hack/cluster.sh
 INSTALLER ?= $(shell pwd)/hack/build-installer.sh
 BUILDER ?= $(shell pwd)/hack/build-image.sh
@@ -155,17 +156,32 @@ test: manifests generate fmt ## Run tests.
 # - SKIP_DESTROY_CLUSTER=true
 # Build images by default; skip with
 # - SKIP_DOCKER_BUILD=true
+# Load images by defaeult; skip with
+# - SKIP_LOAD_IMAGE=true
 
 .PHONY: setup-test-e2e
-setup-test-e2e: recreate-cluster docker-build load ## Set up a cluster for e2e tests if it does not exist.
+setup-test-e2e: recreate-cluster manifests generate fmt vet docker-build load ## Set up a cluster for e2e tests if it does not exist.
 
-.PHONY: test-e2e
-test-e2e: setup-test-e2e manifests generate fmt vet ## Run the e2e tests. Expected an isolated environment using K0s. CertManager is installed by default, skip with: SKIP_CERT_MANAGER_INSTALL=true Recreate cluster by default, skip with SKIP_DESTROY_CLUSTER=true Build images by default, skip with SKIP_DOCKER_BUILD=true
+.PHONY: test-e2e-internal
+test-e2e-internal: setup-test-e2e ## Run the e2e tests. Expected an isolated environment using K0s. CertManager is installed by default, skip with: SKIP_CERT_MANAGER_INSTALL=true Recreate cluster by default, skip with SKIP_DESTROY_CLUSTER=true Build images by default, skip with SKIP_DOCKER_BUILD=true
+	kubectl get namespace daemonjob-system || kubectl create namespace daemonjob-system
 	go test -tags=e2e ./test/e2e/ -v -ginkgo.v
 	$(MAKE) cleanup-test-e2e
 
 .PHONY: cleanup-test-e2e
 cleanup-test-e2e: destroy-cluster ## Tear down the cluster used for e2e tests.
+
+.PHONY: test-e2e
+test-e2e: setup-test-e2e deploy install test-e2e-internal
+
+.PHONY: setup-test-installer
+setup-test-installer: setup-test-e2e chart ## Set up a cluster for installer tests.
+
+.PHONY: test-manifest
+test-manifest: setup-test-installer deploy-manifest test-e2e-internal
+
+.PHONY: test-chart
+test-chart: setup-test-installer deploy-chart test-e2e-internal
 
 .PHONY: clean ## Clean generated files.
 clean: clean-binaries
@@ -236,9 +252,27 @@ deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/c
 deploy-kustomize-manager: ## Kustomize manager manifest to deploy.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMAGE) && $(KUSTOMIZE) edit set configmap controller-manager --from-literal=BROADCAST_IMAGE_REPOSITORY=$(BROADCAST_IMAGE_REPOSITORY) --from-literal=BROADCAST_IMAGE_TAG=$(IMAGE_TAG)
 
+.PHONY: deploy-manifest
+deploy-manifest: ## Deploy controller by manifest.
+	$(KUBECTL) apply -f manifests/install.yaml --server-side=true
+
+CHART ?= ./charts/daemonjob
+
+.PHONY: deploy-chart
+deploy-chart: ## Deploy controller by helm chart.
+	$(HELM) upgrade --install -n daemonjob-system --create-namespace daemonjob $(CHART) --wait --timeout=5m
+
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | $(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f -
+
+.PHONY: undeploy-manifest
+undeploy-manifest: ## Undeploy controller manifest.
+	$(KUBECTL) delete -f manifests/install.yaml
+
+.PHONY: undeploy-chart
+undeploy-chart: ## Undeploy controller chart.
+	$(HELM) uninstall -n daemonjob-system daemonjob
 
 .PHONY: create-cluster
 create-cluster: ## Create a cluster.
@@ -257,8 +291,12 @@ recreate-cluster: destroy-cluster create-cluster ## Recreate a cluster.
 
 .PHONY: load
 load: ## Load images to the cluster.
+ifeq (true,$(SKIP_LOAD_IMAGE))
+	@echo Skip load because SKIP_LOAD_IMAGE is true.
+else
 	$(CLUSTER) load $(IMAGE)
 	$(CLUSTER) load $(BROADCAST_IMAGE)
+endif
 
 .PHONY: samples
 samples: ## Deploy config.samples to the cluster.

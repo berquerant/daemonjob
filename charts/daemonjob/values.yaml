@@ -43,4 +43,4 @@ serviceAccount:
   annotations: {}
   automount: true
   create: true
-  name: ""
+  name: "daemonjob-controller-manager"

@@ -328,7 +328,7 @@
           "type": "boolean"
         },
         "name": {
-          "default": "",
+          "default": "daemonjob-controller-manager",
           "title": "name",
           "type": "string"
         }

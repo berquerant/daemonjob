@@ -397,3 +397,7 @@ func GetJobState(namespace, name, state string) (bool, error) {
 	}
 	return status == "True", nil
 }
+
+func IsEnvTrue(ket string) bool {
+	return os.Getenv(ket) == "true"
+}
