@@ -80,7 +80,7 @@
         "import: \"sigs.k8s.io/logtools/logcheck/gclplugin\"\\s+version: (?<currentValue>.*)"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "sigs.k8s.io/logtools"
+      "depNameTemplate": "kubernetes-sigs/logtools"
     },
     {
       "customType": "regex",
