@@ -83,6 +83,7 @@ linters:
           - staticcheck
           - lll
           - dupl
+          - goconst
         path: test/*
     paths:
       - third_party$
