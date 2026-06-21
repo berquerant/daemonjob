@@ -60,7 +60,7 @@ var _ = AfterSuite(func() {
 // This prevents local kubectl configurations from affecting test behavior.
 // To enable kuberc, set: KUBECTL_KUBERC=true
 func configureKubectlKubeRC() {
-	if os.Getenv("KUBECTL_KUBERC") != "true" {
+	if !utils.IsEnvTrue("KUBECTL_KUBERC") {
 		By("disabling kubectl kuberc for test isolation")
 		err := os.Setenv("KUBECTL_KUBERC", "false")
 		ExpectWithOffset(1, err).NotTo(HaveOccurred(), "Failed to disable kubectl kuberc")
@@ -74,7 +74,7 @@ func configureKubectlKubeRC() {
 // setupCertManager installs CertManager if needed for webhook tests.
 // Skips installation if SKIP_MANAGER_INSTALL=true or if already present.
 func setupCertManager() {
-	if os.Getenv("SKIP_MANAGER_INSTALL") == "true" {
+	if utils.IsEnvTrue("SKIP_MANAGER_INSTALL") {
 		_, _ = fmt.Fprintf(GinkgoWriter, "Skipping CertManager installation (SKIP_MANAGER_INSTALL=true)\n")
 		return
 	}

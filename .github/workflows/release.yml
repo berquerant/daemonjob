@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
       - name: Init
@@ -67,7 +67,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
       - name: Init
@@ -77,7 +77,7 @@ jobs:
         with:
           cache: false
       - name: Login to ghcr
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -110,13 +110,13 @@ jobs:
           - broadcast
     steps:
       - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
       - name: Init
         uses: ./.github/actions/setup-init
       - name: Login to ghcr
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -128,8 +128,8 @@ jobs:
       - name: Create manifest
         env:
           tag: "${{ needs.init.outputs.version }}"
+          image_name: "${{ env.IMAGE_REGISTRY }}/${{ matrix.name }}"
         run: |
-          image_name="${{ env.IMAGE_REGISTRY }}/${{ matrix.name }}"
           image="${image_name}:${tag}"
           docker buildx imagetools create -t "$image" "${image}-arm64" "${image}-amd64"
           get_digest() {
@@ -153,13 +153,14 @@ jobs:
           - ./charts/daemonjob
     steps:
       - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
       - name: Test installer
         uses: ./.github/actions/test-installer
         with:
           build-images: false
+          load-images: false
           cache-go: false
           chart: ${{ matrix.chart }}
 
@@ -178,18 +179,21 @@ jobs:
       PACKAGE: tmp/package
     steps:
       - name: Clone the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          persist-credentials: true
+          persist-credentials: false
+          fetch-depth: 0
       - name: Init
         uses: ./.github/actions/setup-init
       - name: Package the chart
         id: package-chart
+        env:
+          version: ${{ needs.init.outputs.version }}
         run: |
           ./hack/tool.sh helm package --destination "$PACKAGE" "./charts/daemonjob"
-          echo "package_file=${PACKAGE}/daemonjob-${{ needs.init.outputs.version }}.tgz" >> $GITHUB_OUTPUT
+          echo "package_file=${PACKAGE}/daemonjob-${version}.tgz" >> $GITHUB_OUTPUT
       - name: Login to ghcr
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -199,8 +203,6 @@ jobs:
           package_file: ${{ steps.package-chart.outputs.package_file }}
           remote: oci://ghcr.io/berquerant/daemonjob/charts/daemonjob
         run: ./hack/tool.sh helm push "$package_file" "$remote"
-      - name: Fetch history
-        run: git fetch --prune --unshallow
       - name: Create release
         run: |
           extra_args=""

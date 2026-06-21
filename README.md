@@ -63,5 +63,7 @@ More information can be found via the [Kubebuilder Documentation](https://book.k
 ### Release
 
 1. Confirm that CI on the main branch is green.
-2. Change [VERSION](VERSION) and commit it.
-3. `make release`.
+2. Run [Create Update Version PR](https://github.com/berquerant/daemonjob/actions/workflows/update-version.yml).
+3. Confirm the PR and merge it.
+4. Update the local main branch to the latest.
+5. `make release`.

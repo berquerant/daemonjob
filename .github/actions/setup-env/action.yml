@@ -7,18 +7,19 @@ runs:
       shell: bash
       run: |
         cat <<EOS >> "$GITHUB_ENV"
-        KUBECTL_VERSION=v1.36.0
+        KUBECTL_VERSION=v1.36.1
         CONTROLLER_GEN_VERSION=v0.20.1
         KUSTOMIZE_VERSION=v5.8.1
         GOLANGCI_LINT_VERSION=v2.12.2
         K0S_VERSION=v1.35.4-k0s.0
         GO_LICENSES_VERSION=v2.0.1
-        HELMIFY_VERSION=v0.4.19
+        HELMIFY_VERSION=v0.4.20
         CRD_REF_DOCS_VERSION=v0.3.0
         HELM_VERSION=v4.2.0
-        HELM_SCHEMA_VERSION=0.23.2
-        YQ_VERSION=v4.53.2
+        HELM_SCHEMA_VERSION=0.23.4
+        YQ_VERSION=v4.53.3
         CERTMANAGER_VERSION=v1.20.2
+        SHELLCHECK_VERSION=v0.11.0
         IMAGE_REGISTRY=ghcr.io/berquerant/daemonjob
         CACHE_DIR=tmp/cache
         DOCKER_CACHE_DIR=tmp/cache/docker

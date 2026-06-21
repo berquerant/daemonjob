@@ -1,0 +1,22 @@
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuring-automatically-generated-release-notes
+changelog:
+  categories:
+    - title: ":rotating_light: Breaking Changes"
+      labels:
+        - breaking-change
+    - title: ":shield: Security Fix"
+      labels:
+        - security
+    - title: ":sparkles: Features"
+      labels:
+        - enhancement
+    - title: ":bug: Bug Fixes"
+      labels:
+        - bug
+    - title: ":package: Dependency updates"
+      labels:
+        - dependencies
+        - renovate
+    - title: ":wrench: Other Changes"
+      labels:
+        - "*"

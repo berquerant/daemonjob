@@ -97,6 +97,15 @@ fix_controller_manager_broadcast_role() {
   popd > /dev/null
 }
 
+fix_serviceaccount_name() {
+  pushd "$chart" > /dev/null
+  local __tmp
+  __tmp="$(mktemp)"
+  yq '.serviceAccount.name = "daemonjob-controller-manager"' values.yaml > "$__tmp"
+  cat "$__tmp" > values.yaml
+  popd > /dev/null
+}
+
 build_chart() {
   local -r __version="$1"
   rm -rf "$chart_dir"
@@ -104,6 +113,7 @@ build_chart() {
   generate_chart_yaml "$__version" > "$chart_yaml"
   set_values_broadcast_role_empty
   fix_controller_manager_broadcast_role
+  fix_serviceaccount_name
   generate_values_schema
   helm lint --strict "$chart"
 }
