@@ -4,7 +4,7 @@
 #
 # See: https://golangci-lint.run/plugins/module-plugins/
 # GOLANGCI_LINT
-version: v2.11.4
+version: v2.12.2
 destination: ./bin
 plugins:
   # logcheck validates structured logging calls and parameters (e.g., balanced key-value pairs)
