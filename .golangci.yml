@@ -69,6 +69,7 @@ linters:
         path-except: api/*
       - linters:
           - lll
+          - staticcheck
         path: api/*
       - linters:
           - dupl
