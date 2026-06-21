@@ -12019,8 +12019,8 @@ SOFTWARE.```
 ## k8s.io/kubernetes/pkg/util/hash
 
 * Name: k8s.io/kubernetes/pkg/util/hash
-* Version: v1.36.0
-* License: [Apache-2.0](https://github.com/kubernetes/kubernetes/blob/v1.36.0/LICENSE)
+* Version: v1.36.1
+* License: [Apache-2.0](https://github.com/kubernetes/kubernetes/blob/v1.36.1/LICENSE)
 
 ```
 
