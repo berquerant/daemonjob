@@ -5,13 +5,19 @@
     "controllerManager": {
       "additionalProperties": false,
       "properties": {
+        "affinity": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
         "broadcastImageRepository": {
           "default": "ghcr.io/berquerant/daemonjob/broadcast",
           "title": "broadcastImageRepository",
           "type": "string"
         },
         "broadcastImageTag": {
-          "default": "0.0.2-alpha.2",
+          "default": "0.0.2-alpha.3",
           "title": "broadcastImageTag",
           "type": "string"
         },
@@ -94,7 +100,7 @@
                   "type": "string"
                 },
                 "tag": {
-                  "default": "0.0.2-alpha.2",
+                  "default": "0.0.2-alpha.3",
                   "title": "tag",
                   "type": "string"
                 }
@@ -227,6 +233,7 @@
         }
       },
       "required": [
+        "affinity",
         "broadcastImageRepository",
         "broadcastImageTag",
         "broadcastRole",
