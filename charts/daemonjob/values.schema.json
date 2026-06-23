@@ -17,7 +17,7 @@
           "type": "string"
         },
         "broadcastImageTag": {
-          "default": "0.0.2-alpha.3",
+          "default": "0.0.2",
           "title": "broadcastImageTag",
           "type": "string"
         },
@@ -100,7 +100,7 @@
                   "type": "string"
                 },
                 "tag": {
-                  "default": "0.0.2-alpha.3",
+                  "default": "0.0.2",
                   "title": "tag",
                   "type": "string"
                 }
