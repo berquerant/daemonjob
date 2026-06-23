@@ -188,13 +188,19 @@
       ]
     },
     {
-      "addLabels": [
-        "go"
-      ],
+      "description": "Group go kubernetes dependencies",
+      "groupName": "kubernetes",
+      "addLabels": ["kubernetes"],
+      "matchManagers": ["gomod"],
+      "matchDepNames": ["/(sigs\\.)?k8s\\.io.+/"]
+    },
+    {
       "description": "Group go dependencies",
-      "groupName": "go({{updateType}})",
-      "matchDatasources": [
-        "go"
+      "groupName": "go({{updateType}}) in {{#if packageFileDir}}{{packageFileDir}}{{else}}root{{/if}}",
+      "addLabels": ["go"],
+      "matchDatasources": ["go"],
+      "matchDepNames": [
+        "!/(sigs\\.)?k8s\\.io.+/"
       ]
     }
   ],
