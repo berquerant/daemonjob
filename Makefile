@@ -108,10 +108,6 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-.PHONY: vuln
-vuln: ## Run govolncheck.
-	go tool govulncheck ./...
-
 .PHONY: go-fix
 go-fix: ## Run go fix.
 	go fix -diff ./...

@@ -2,7 +2,7 @@
 
 * Name: cel.dev/expr
 * Version: v0.25.1
-* License: [Apache-2.0](https://github.com/google/cel-spec/blob/v0.25.1/LICENSE)
+* License: [Apache-2.0](https://github.com/cel-expr/cel-spec/blob/v0.25.1/LICENSE)
 
 ```
 
@@ -8375,8 +8375,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/net
 
 * Name: golang.org/x/net
-* Version: v0.53.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/net/+/v0.53.0:LICENSE)
+* Version: v0.56.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/net/+/v0.56.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8410,8 +8410,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/oauth2
 
 * Name: golang.org/x/oauth2
-* Version: v0.34.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/oauth2/+/v0.34.0:LICENSE)
+* Version: v0.36.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/oauth2/+/v0.36.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8445,8 +8445,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/sync
 
 * Name: golang.org/x/sync
-* Version: v0.20.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/sync/+/v0.20.0:LICENSE)
+* Version: v0.21.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/sync/+/v0.21.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8480,8 +8480,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/sys/unix
 
 * Name: golang.org/x/sys/unix
-* Version: v0.43.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/sys/+/v0.43.0:LICENSE)
+* Version: v0.46.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/sys/+/v0.46.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8515,8 +8515,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/term
 
 * Name: golang.org/x/term
-* Version: v0.42.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/term/+/v0.42.0:LICENSE)
+* Version: v0.44.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/term/+/v0.44.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8550,8 +8550,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## golang.org/x/text
 
 * Name: golang.org/x/text
-* Version: v0.36.0
-* License: [BSD-3-Clause](https://cs.opensource.google/go/x/text/+/v0.36.0:LICENSE)
+* Version: v0.39.0
+* License: [BSD-3-Clause](https://cs.opensource.google/go/x/text/+/v0.39.0:LICENSE)
 
 ```
 Copyright 2009 The Go Authors.
@@ -8830,8 +8830,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## google.golang.org/genproto/googleapis/api
 
 * Name: google.golang.org/genproto/googleapis/api
-* Version: v0.0.0-20260128011058-8636f8732409
-* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/8636f8732409/googleapis/api/LICENSE)
+* Version: v0.0.0-20260414002931-afd174a4e478
+* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/afd174a4e478/googleapis/api/LICENSE)
 
 ```
 
@@ -9040,8 +9040,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## google.golang.org/genproto/googleapis/rpc
 
 * Name: google.golang.org/genproto/googleapis/rpc
-* Version: v0.0.0-20260128011058-8636f8732409
-* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/8636f8732409/googleapis/rpc/LICENSE)
+* Version: v0.0.0-20260414002931-afd174a4e478
+* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/afd174a4e478/googleapis/rpc/LICENSE)
 
 ```
 
@@ -9250,8 +9250,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## google.golang.org/grpc
 
 * Name: google.golang.org/grpc
-* Version: v1.79.3
-* License: [Apache-2.0](https://github.com/grpc/grpc-go/blob/v1.79.3/LICENSE)
+* Version: v1.82.1
+* License: [Apache-2.0](https://github.com/grpc/grpc-go/blob/v1.82.1/LICENSE)
 
 ```
 
