@@ -7,7 +7,7 @@ runs:
       shell: bash
       run: |
         cat <<EOS >> "$GITHUB_ENV"
-        KUBECTL_VERSION=v1.36.2
+        KUBECTL_VERSION=v1.36.3
         CONTROLLER_GEN_VERSION=v0.21.0
         KUSTOMIZE_VERSION=v5.8.1
         GOLANGCI_LINT_VERSION=v2.12.2
