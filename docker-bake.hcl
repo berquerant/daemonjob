@@ -22,6 +22,7 @@ target "manager" {
 }
 
 target "broadcast" {
-  context = "./broadcast"
+  context = "."
+  dockerfile = "broadcast/Dockerfile"
   tags = gentags("broadcast")
 }

@@ -1,5 +1,4 @@
 controllerManager:
-  affinity: {}
   broadcastImageRepository: ghcr.io/berquerant/daemonjob/broadcast
   broadcastImageTag: 0.0.2
   broadcastRole: ""

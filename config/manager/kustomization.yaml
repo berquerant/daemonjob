@@ -8,9 +8,9 @@ images:
   newTag: 0.0.2
 configMapGenerator:
 - literals:
+  - BROADCAST_IMAGE_REPOSITORY=ghcr.io/berquerant/daemonjob/broadcast
   - BROADCAST_IMAGE_TAG=0.0.2
   - BROADCAST_ROLE=daemonjob-broadcast-role
-  - BROADCAST_IMAGE_REPOSITORY=ghcr.io/berquerant/daemonjob/broadcast
   name: controller-manager
   options:
     disableNameSuffixHash: true

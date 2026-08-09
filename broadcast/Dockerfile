@@ -1,35 +1,24 @@
-# syntax=docker/dockerfile:1
-# check=error=true
-FROM debian:trixie-slim AS builder
-ARG YQ_VERSION=v4.53.2
-ARG KUBECTL_VERSION=v1.36.0
+# Build the broadcast binary
+FROM golang:1.26 AS builder
+ARG TARGETOS
 ARG TARGETARCH
 
-ENV OS_ARCH="${TARGETARCH:-amd64}"
-ENV OS_NAME="linux"
+WORKDIR /workspace
 
-WORKDIR /app
+RUN --mount=type=cache,target=/go/pkg/mod/ \
+    --mount=type=bind,source=go.mod,target=go.mod \
+    go mod download
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get upgrade -y && apt-get --no-install-recommends install -y ca-certificates curl
+# Build
+RUN --mount=type=cache,target=/go/pkg/mod/ \
+    --mount=type=bind,target=. \
+    CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o /broadcast cmd/broadcast/main.go
 
-RUN curl -SsLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS_NAME}/${OS_ARCH}/kubectl" \
- && curl -SsLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS_NAME}/${OS_ARCH}/kubectl.sha256" \
- && echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check \
- && chmod +x kubectl
+# Use distroless as minimal base image to package the broadcast binary
+# Refer to https://github.com/GoogleContainerTools/distroless for more details
+FROM gcr.io/distroless/static:nonroot AS final
+WORKDIR /
+COPY --from=builder /broadcast /broadcast
+USER 65532:65532
 
-RUN curl -SsL -o- "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_${OS_NAME}_${OS_ARCH}.tar.gz" | tar xz \
- && mv "yq_${OS_NAME}_${OS_ARCH}" yq \
- && chmod +x yq
-
-FROM debian:trixie-slim AS final
-
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get upgrade -y && apt-get --no-install-recommends install -y ca-certificates
-COPY --from=builder /app/kubectl /app/yq /usr/local/bin/
-COPY broadcast.sh /usr/local/bin/
-
-USER 1001
-ENTRYPOINT ["broadcast.sh"]
+ENTRYPOINT ["/broadcast"]
