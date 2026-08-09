@@ -14,7 +14,7 @@ This file provides rules, architectural context, development workflows, and stri
 - **`DaemonCronJobSet`** (`api/v1/daemoncronjobset_types.go`): Deploys individual CronJobs directly to each targeted node.
 
 ### Architectural Pattern: Broadcast Execution
-- The main controller manager (`cmd/main.go`, `internal/controller/`) launches a `broadcast Job` running `broadcast/broadcast.sh`.
+- The main controller manager (`cmd/controller/main.go`, `internal/controller/`) launches a `broadcast Job` running `broadcast/broadcast.sh`.
 - `broadcast.sh` inspects nodes, constructs worker Job manifests using `kustomize`, validates them with `--dry-run=server`, and applies them to all targeted nodes atomically.
 
 ---
@@ -25,7 +25,8 @@ This file provides rules, architectural context, development workflows, and stri
 daemonjob/
 ├── api/v1/                 # CRD Go struct definitions (DaemonJob, DaemonCronJob, DaemonCronJobSet)
 ├── broadcast/              # Broadcast container logic (broadcast.sh) and Dockerfile
-├── cmd/main.go             # Controller Manager entrypoint
+├── cmd/
+│   └── controller/         # Controller Manager entrypoint (main.go)
 ├── internal/
 │   ├── controller/         # Reconciler logic & unit tests
 │   └── util/               # Internal utilities

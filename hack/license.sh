@@ -14,7 +14,7 @@ go_licenses() {
 }
 
 readonly ignore='--ignore "github.com/berquerant/daemonjob/"'
-readonly target='./cmd'
+readonly target='./cmd/controller'
 
 report() {
     go_licenses report "$target" $ignore --template="${d}/notice-template.md"
