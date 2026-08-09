@@ -1,0 +1,78 @@
+# AGENTS.md - Antigravity Agent Guidelines for daemonjob
+
+This file provides rules, architectural context, development workflows, and strict verification protocols for AI coding assistants working in the **daemonjob** repository.
+
+---
+
+## 1. Project Overview & Architecture
+
+**daemonjob** is a Kubernetes Operator that combines the node-targeting capabilities of a DaemonSet with the run-to-completion batch semantics of a Job through Custom Resource Definitions (CRDs).
+
+### Key Custom Resources (CRDs)
+- **`DaemonJob`** (`api/v1/daemonjob_types.go`): Executes a batch job once per targeted node. Spawns a middleman broadcast Job.
+- **`DaemonCronJob`** (`api/v1/daemoncronjob_types.go`): Adds cron-based scheduled executions for cluster-wide node batch jobs.
+- **`DaemonCronJobSet`** (`api/v1/daemoncronjobset_types.go`): Deploys individual CronJobs directly to each targeted node.
+
+### Architectural Pattern: Broadcast Execution
+- The main controller manager (`cmd/main.go`, `internal/controller/`) launches a `broadcast Job` running `broadcast/broadcast.sh`.
+- `broadcast.sh` inspects nodes, constructs worker Job manifests using `kustomize`, validates them with `--dry-run=server`, and applies them to all targeted nodes atomically.
+
+---
+
+## 2. Directory Structure
+
+```text
+daemonjob/
+├── api/v1/                 # CRD Go struct definitions (DaemonJob, DaemonCronJob, DaemonCronJobSet)
+├── broadcast/              # Broadcast container logic (broadcast.sh) and Dockerfile
+├── cmd/main.go             # Controller Manager entrypoint
+├── internal/
+│   ├── controller/         # Reconciler logic & unit tests
+│   └── util/               # Internal utilities
+├── config/                 # Kustomize manifests (crd, default, manager, rbac, samples)
+├── manifests/              # Consolidated installation manifest (install.yaml)
+├── charts/daemonjob/       # Helm chart definitions
+├── docs/                   # Auto-generated CRD documentation
+├── hack/                   # Build, test, tool setup, and code generation scripts
+├── Makefile                # Primary development tasks
+└── PROJECT                 # Kubebuilder (v4) project metadata
+```
+
+---
+
+## 3. Essential Development & Code Sync Workflows
+
+### Code Generation & Manifest Synchronization
+When modifying CRD structs, specifications, or manifests, you MUST run the corresponding generation commands:
+
+1. **CRD Struct Changes (`api/v1/*.go`)**:
+   - Run `make generate` (updates `zz_generated.deepcopy.go`)
+   - Run `make manifests` (updates `config/crd/bases/`)
+2. **Release Asset & Doc Sync**:
+   - Run `make build-installer` (updates `manifests/install.yaml`)
+   - Run `make chart` (updates `charts/daemonjob/`)
+   - Run `make docs` (updates `docs/`)
+
+---
+
+## 4. Verification Protocols (Definition of Done)
+
+Before declaring any task or PR complete, you MUST execute and pass all verification steps:
+
+```bash
+# 1. Code Quality & Linting
+make fmt
+make vet
+make lint        # Runs go-fix, golangci-lint, check-licenses, shellcheck
+
+# 2. Unit Tests
+make test        # Runs controller & internal unit tests with envtest
+
+# 3. End-to-End Tests (Mandatory for controller/broadcast changes)
+make test-e2e    # Spawns local K0s cluster and executes full E2E suite
+```
+
+### Strict Quality Rules
+- **No Swallowing Errors**: Never delete test assertions or ignore failing linters to pass CI. Investigate root causes and fix them cleanly.
+- **License Headers**: All new Go files must include the license header specified in `hack/boilerplate.go.txt`.
+- **ShellCheck**: All shell script changes (`*.sh`) must pass `shellcheck` with zero warnings.
