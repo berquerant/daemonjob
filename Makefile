@@ -191,6 +191,7 @@ clean-binaries: ## Clean all binaries.
 .PHONY: build
 build: manifests generate docs fmt vet ## Build manager binary.
 	go build -o bin/manager cmd/controller/main.go
+	go build -o bin/broadcast cmd/broadcast/main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
