@@ -148,7 +148,8 @@ gen_job_name() {
 gen_patch() {
   local -r __name="$1"
   local -r __node="$2"
-  cat <<EOS > "$patch" # overwrite patch
+  local -r __patch_file="${3:-$patch}"
+  cat <<EOS > "$__patch_file" # overwrite patch
 - op: replace
   path: /metadata/name
   value: ${__name}
@@ -202,36 +203,17 @@ $(get_base_job_tolerations | indent 4)
   value: ${daemon_job_role_value}
 EOS
   if [[ -n "$daemon_job_name" ]] ; then
-    cat << EOS >> "$patch"
+    cat << EOS >> "$__patch_file"
 - op: add
   path: /metadata/labels/$(echo "$daemon_job_name_label" | escape_path)
   value: ${daemon_job_name}
 EOS
   else
-    cat << EOS >> "$patch"
+    cat << EOS >> "$__patch_file"
 - op: add
   path: /metadata/labels/$(echo "$daemon_cronjob_name_label" | escape_path)
   value: ${daemon_cronjob_name}
 EOS
-  fi
-}
-
-apply_job() {
-  local -r __node="$1"
-  local __name
-  __name="$(gen_job_name "$__node")"
-  if ! gen_patch "$__name" "$__node" ; then
-    termination_log "Failed to generate patch"
-    return 1
-  fi
-  log "Apply ${__name} for node ${__node}"
-  if __kubectl_ns apply -k "$workspace" ; then
-    log "Applied ${__name} for node ${__node} successfully."
-    return
-  else
-    log "Failed to apply ${__name} for node ${__node}."
-    termination_log "Failed to apply Job for node ${__node}"
-    return 1
   fi
 }
 
@@ -246,14 +228,70 @@ faillog() {
   cat >&2 "$node_selector"
   log "Base:"
   cat >&2 "$base"
-  log "Patch:"
-  cat >&2 "$patch"
+  if [[ -f "$patch" ]] ; then
+    log "Patch:"
+    cat >&2 "$patch"
+  fi
 }
 trap faillog ERR
 
 log "List nodes ..."
-list_nodes
-list_nodes | while read -r node ; do
-  log "Process node ${node} ..."
-  apply_job "$node"
+if ! list_nodes > "${workspace}/nodes.txt" ; then
+  termination_log "Failed to list nodes"
+  exit 1
+fi
+
+nodes=()
+while read -r node ; do
+  [[ -n "$node" ]] && nodes+=("$node")
+done < "${workspace}/nodes.txt"
+
+if [[ ${#nodes[@]} -eq 0 ]] ; then
+  log "No nodes found to process."
+  exit 0
+fi
+
+all_jobs_manifest="${workspace}/all_jobs.yaml"
+true > "$all_jobs_manifest"
+
+for node in "${nodes[@]}" ; do
+  log "Processing node ${node} ..."
+  job_name="$(gen_job_name "$node")"
+  node_dir="${workspace}/node_${node}"
+  mkdir -p "$node_dir"
+  cp "$base" "${node_dir}/base.yaml"
+  cat <<EOS > "${node_dir}/kustomization.yaml"
+resources:
+- base.yaml
+patches:
+- target:
+    group: batch
+    version: v1
+    kind: Job
+    name: ${base_job_name}
+  path: patch.yaml
+EOS
+
+  if ! gen_patch "$job_name" "$node" "${node_dir}/patch.yaml" ; then
+    log "Failed to generate patch for node ${node}"
+    termination_log "Failed to generate patch for node ${node}"
+    exit 1
+  fi
+
+  if ! __kubectl kustomize "$node_dir" >> "$all_jobs_manifest" ; then
+    log "Failed to kustomize Job for node ${node}"
+    termination_log "Failed to kustomize Job for node ${node}"
+    exit 1
+  fi
+  echo "---" >> "$all_jobs_manifest"
 done
+
+log "Validating worker jobs manifest with server-side dry-run ..."
+if ! __kubectl_ns apply -f "$all_jobs_manifest" --dry-run=server > /dev/null ; then
+  log "Dry-run validation failed for worker jobs."
+  termination_log "Failed dry-run validation for worker Jobs"
+  exit 1
+fi
+
+log "Applying worker jobs for ${#nodes[@]} node(s) atomically ..."
+__kubectl_ns apply -f "$all_jobs_manifest"
