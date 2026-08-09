@@ -5,12 +5,6 @@
     "controllerManager": {
       "additionalProperties": false,
       "properties": {
-        "affinity": {
-          "additionalProperties": false,
-          "required": [],
-          "title": "affinity",
-          "type": "object"
-        },
         "broadcastImageRepository": {
           "default": "ghcr.io/berquerant/daemonjob/broadcast",
           "title": "broadcastImageRepository",
@@ -233,7 +227,6 @@
         }
       },
       "required": [
-        "affinity",
         "broadcastImageRepository",
         "broadcastImageTag",
         "broadcastRole",
