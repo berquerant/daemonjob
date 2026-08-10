@@ -5,10 +5,10 @@
 # Dynamically detects current v0.Y.Z versioned k8s.io/* dependencies directly from go.mod.
 #
 # Usage:
-#   ./hack/update-k8s-deps.sh <k8s-version> <controller-runtime-version> [controller-tools-version]
+#   ./hack/update-k8s-deps.sh <k8s-version> <controller-runtime-version> [controller-tools-version] [k0s-version]
 #
 # Example:
-#   ./hack/update-k8s-deps.sh 1.36.3 0.24.1 v0.21.0
+#   ./hack/update-k8s-deps.sh 1.36.3 0.24.1 v0.21.0 v1.36.2-k0s.0
 #
 
 set -eo pipefail
@@ -23,17 +23,19 @@ readonly topd="${d}/.."
 readonly k8s_ver="$1"
 readonly cr_ver="$2"
 readonly ct_ver="$3"
+readonly k0s_ver="$4"
 
 if [[ -z "$k8s_ver" || -z "$cr_ver" ]]; then
   cat <<EOS >&2
-Usage: ${0##*/} <k8s-version> <controller-runtime-version> [controller-tools-version]
+Usage: ${0##*/} <k8s-version> <controller-runtime-version> [controller-tools-version] [k0s-version]
 
   k8s-version:                e.g. 1.36.3 or v1.36.3
   controller-runtime-version: e.g. 0.24.1 or v0.24.1
   controller-tools-version:   e.g. v0.21.0 (optional)
+  k0s-version:                e.g. v1.36.2-k0s.0 (optional)
 
 Examples:
-  ${0##*/} 1.36.3 0.24.1 v0.21.0
+  ${0##*/} 1.36.3 0.24.1 v0.21.0 v1.36.2-k0s.0
 EOS
   exit 1
 fi
@@ -49,15 +51,21 @@ log "Target Kubernetes version: v${clean_k8s_ver}"
 log "Target k8s.io module version: v${k8s_minor_ver}"
 log "Target controller-runtime version: v${clean_cr_ver}"
 
-if [[ -n "$ct_ver" ]]; then
-  readonly clean_ct_ver="v${ct_ver#v}"
-  log "Target controller-tools version: ${clean_ct_ver}"
-  
-  readonly env_file="${topd}/.github/actions/setup-env/action.yml"
-  if [[ -f "$env_file" ]]; then
-    log "Updating CONTROLLER_GEN_VERSION and KUBECTL_VERSION in ${env_file}..."
-    sed -i '' -E "s/KUBECTL_VERSION=v[0-9]+\.[0-9]+\.[0-9]+/KUBECTL_VERSION=v${clean_k8s_ver}/g" "$env_file"
+readonly env_file="${topd}/.github/actions/setup-env/action.yml"
+if [[ -f "$env_file" ]]; then
+  log "Updating KUBECTL_VERSION in ${env_file}..."
+  sed -i '' -E "s/KUBECTL_VERSION=v[0-9]+\.[0-9]+\.[0-9]+/KUBECTL_VERSION=v${clean_k8s_ver}/g" "$env_file"
+
+  if [[ -n "$ct_ver" ]]; then
+    readonly clean_ct_ver="v${ct_ver#v}"
+    log "Updating CONTROLLER_GEN_VERSION in ${env_file} to ${clean_ct_ver}..."
     sed -i '' -E "s/CONTROLLER_GEN_VERSION=v[0-9]+\.[0-9]+\.[0-9]+/CONTROLLER_GEN_VERSION=${clean_ct_ver}/g" "$env_file"
+  fi
+
+  if [[ -n "$k0s_ver" ]]; then
+    readonly clean_k0s_ver="${k0s_ver}"
+    log "Updating K0S_VERSION in ${env_file} to ${clean_k0s_ver}..."
+    sed -i '' -E "s/K0S_VERSION=v[0-9]+\.[0-9]+\.[0-9]+-k0s\.[0-9]+/K0S_VERSION=${clean_k0s_ver}/g" "$env_file"
   fi
 fi
 
