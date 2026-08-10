@@ -79,3 +79,43 @@ make test-e2e    # Spawns local K0s cluster and executes full E2E suite
 - **No Swallowing Errors**: Never delete test assertions or ignore failing linters to pass CI. Investigate root causes and fix them cleanly.
 - **License Headers**: All new Go files must include the license header specified in `hack/boilerplate.go.txt`.
 - **ShellCheck**: All shell script changes (`*.sh`) must pass `shellcheck` with zero warnings.
+
+---
+
+## 5. Kubernetes Dependency Upgrade Playbook
+
+When asked to upgrade Kubernetes libraries (e.g. `k8s.io/*`, `sigs.k8s.io/controller-runtime`), AI agents MUST follow this playbook:
+
+### Step 1: Version Selection Matrix
+1. **Target Kubernetes Version**: Choose `v1.Y.Z` (e.g. `v1.31.2`).
+2. **`k8s.io/*` Submodules**: Must match `v0.Y.Z` (e.g. `v0.31.2`).
+   - Dynamically inspect `go.mod` (e.g. `go list -m all | grep -E '^k8s\.io/'`) at execution time to identify active `k8s.io/*` dependencies rather than relying on hardcoded module lists.
+3. **`controller-runtime` (`CR`)**: Select matching version from [controller-runtime Releases](https://github.com/kubernetes-sigs/controller-runtime/releases).
+4. **`controller-tools` (`CT`)**: Select matching version from [controller-tools Releases](https://github.com/kubernetes-sigs/controller-tools/releases).
+
+### Step 2: Execute Update Helper Script
+Run `./hack/update-k8s-deps.sh` to update `go.mod` and `.github/actions/setup-env/action.yml`:
+
+```bash
+# Usage: ./hack/update-k8s-deps.sh <k8s-version> <controller-runtime-version> [controller-tools-version]
+./hack/update-k8s-deps.sh 1.31.2 0.19.3 v0.16.5
+```
+
+### Step 3: Full Manifest Re-generation & DoD Verification
+After updating dependencies, execute the mandatory code generation, asset sync, and verification pipeline:
+
+```bash
+# 1. Code & Manifest Re-generation
+make generate        # Updates zz_generated.deepcopy.go
+make manifests       # Updates config/crd/bases/
+make build-installer # Updates manifests/install.yaml
+make chart           # Updates charts/daemonjob/
+make docs            # Updates docs/
+
+# 2. Quality & Verification
+make fmt
+make vet
+make lint
+make test
+make test-e2e        # Must pass all E2E specs
+```
