@@ -92,13 +92,14 @@ When asked to upgrade Kubernetes libraries (e.g. `k8s.io/*`, `sigs.k8s.io/contro
    - Dynamically inspect `go.mod` (e.g. `go list -m all | grep -E '^k8s\.io/'`) at execution time to identify active `k8s.io/*` dependencies rather than relying on hardcoded module lists.
 3. **`controller-runtime` (`CR`)**: Select matching version from [controller-runtime Releases](https://github.com/kubernetes-sigs/controller-runtime/releases).
 4. **`controller-tools` (`CT`)**: Select matching version from [controller-tools Releases](https://github.com/kubernetes-sigs/controller-tools/releases).
+5. **`k0s` (`K0S`)**: Select closest matching version for E2E testing from [k0s Releases](https://github.com/k0sproject/k0s/releases) (e.g. `v1.31.2-k0s.0`).
 
 ### Step 2: Execute Update Helper Script
 Run `./hack/update-k8s-deps.sh` to update `go.mod` and `.github/actions/setup-env/action.yml`:
 
 ```bash
-# Usage: ./hack/update-k8s-deps.sh <k8s-version> <controller-runtime-version> [controller-tools-version]
-./hack/update-k8s-deps.sh 1.31.2 0.19.3 v0.16.5
+# Usage: ./hack/update-k8s-deps.sh <k8s-version> <controller-runtime-version> [controller-tools-version] [k0s-version]
+./hack/update-k8s-deps.sh 1.31.2 0.19.3 v0.16.5 v1.31.2-k0s.0
 ```
 
 ### Step 3: Full Manifest Re-generation & DoD Verification

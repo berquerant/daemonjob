@@ -7,28 +7,6 @@
     {
       "customType": "regex",
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes/kubernetes",
-      "managerFilePatterns": [
-        "/^.github/actions/setup-env/action.yml$/"
-      ],
-      "matchStrings": [
-        "KUBECTL_VERSION=(?<currentValue>.*)"
-      ]
-    },
-    {
-      "customType": "regex",
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kubernetes-sigs/controller-tools",
-      "managerFilePatterns": [
-        "/^.github/actions/setup-env/action.yml$/"
-      ],
-      "matchStrings": [
-        "CONTROLLER_GEN_VERSION=(?<currentValue>.*)"
-      ]
-    },
-    {
-      "customType": "regex",
-      "datasourceTemplate": "github-releases",
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "managerFilePatterns": [
         "/^.github/actions/setup-env/action.yml$/"
@@ -59,17 +37,6 @@
       ],
       "matchStrings": [
         "import: \"sigs.k8s.io/logtools/logcheck/gclplugin\"\\s+version: (?<currentValue>.*)"
-      ]
-    },
-    {
-      "customType": "regex",
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "k0sproject/k0s",
-      "managerFilePatterns": [
-        "/^.github/actions/setup-env/action.yml$/"
-      ],
-      "matchStrings": [
-        "K0S_VERSION=(?<currentValue>.*)"
       ]
     },
     {
@@ -188,9 +155,8 @@
       ]
     },
     {
-      "description": "Group go kubernetes dependencies",
-      "groupName": "kubernetes",
-      "addLabels": ["kubernetes"],
+      "description": "Ignore go kubernetes dependencies (managed manually via playbook)",
+      "enabled": false,
       "matchManagers": ["gomod"],
       "matchDepNames": ["/(sigs\\.)?k8s\\.io.+/"]
     },
