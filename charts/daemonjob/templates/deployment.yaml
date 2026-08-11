@@ -21,7 +21,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
     spec:
-      affinity: {}
+      affinity: {{- toYaml .Values.controllerManager.affinity | nindent 8 }}
       containers:
       - args: {{- toYaml .Values.controllerManager.manager.args | nindent 8 }}
         command:
