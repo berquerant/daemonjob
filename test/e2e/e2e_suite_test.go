@@ -38,7 +38,7 @@ var (
 //
 // To enable kubectl kuberc (use custom kubectl configurations), set: KUBECTL_KUBERC=true
 // By default, kuberc is disabled to ensure consistent test behavior across different environments.
-// To skip CertManager installation, set: SKIP_MANAGER_INSTALL=true
+// By default, CertManager installation is disabled. To enable it, set: ENABLE_CERT_MANAGER=true
 func TestE2E(t *testing.T) {
 	SetDefaultEventuallyTimeout(2 * time.Minute)
 	SetDefaultEventuallyPollingInterval(time.Second)
@@ -71,11 +71,11 @@ func configureKubectlKubeRC() {
 	}
 }
 
-// setupCertManager installs CertManager if needed for webhook tests.
-// Skips installation if SKIP_MANAGER_INSTALL=true or if already present.
+// setupCertManager installs CertManager if explicitly enabled.
+// By default, CertManager installation is skipped. Set ENABLE_CERT_MANAGER=true to enable it.
 func setupCertManager() {
-	if utils.IsEnvTrue("SKIP_MANAGER_INSTALL") {
-		_, _ = fmt.Fprintf(GinkgoWriter, "Skipping CertManager installation (SKIP_MANAGER_INSTALL=true)\n")
+	if !utils.IsEnvTrue("ENABLE_CERT_MANAGER") {
+		_, _ = fmt.Fprintf(GinkgoWriter, "Skipping CertManager installation (ENABLE_CERT_MANAGER is not true)\n")
 		return
 	}
 
