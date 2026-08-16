@@ -153,7 +153,7 @@ func generateDaemonJob(dj *daemonjobv1.DaemonJob, nodes []string, image, cluster
 	}
 
 	// Worker Job names follow the pattern: {broadcastJobName}-{nodeName}
-	broadcastJobName := dj.Name + "-" + controller.DaemonJobResourceSuffix
+	broadcastJobName := args.JobName()
 	cfg := &broadcast.Config{
 		SelfName:      broadcastJobName,
 		Namespace:     dj.Namespace,
@@ -192,7 +192,7 @@ func generateDaemonCronJob(dcj *daemonjobv1.DaemonCronJob, nodes []string, image
 
 	// Worker Job names follow the pattern: {broadcastJobName}-{nodeName}
 	// where broadcastJobName is the name of the Job spawned by the CronJob on each trigger.
-	broadcastJobName := dcj.Name + "-" + controller.DaemonCronJobResourceSuffix
+	broadcastJobName := args.JobName()
 	daemonJobSpec := args.AsDaemonJob().Spec
 	cfg := &broadcast.Config{
 		SelfName:          broadcastJobName,
