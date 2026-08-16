@@ -62,6 +62,9 @@ Commands:
 
   generate          Generate the Kubernetes manifests that daemonjob would create
                     for a given custom resource and a list of node names.
+                    This output is for preview and simulation purposes only (e.g. CI review, dry-run).
+                    It does not guarantee runtime behavior, and runtime-assigned fields (such as
+                    controller UID) are placeholders.
                     For DaemonJob and DaemonCronJob, broadcast resources are output
                     directly, and worker Jobs are output as commented-out YAML.
                     For DaemonCronJobSet, all per-node CronJobs are output directly.
