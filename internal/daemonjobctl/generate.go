@@ -147,6 +147,7 @@ func generateDaemonJob(dj *daemonjobv1.DaemonJob, nodes []string, image, cluster
 	args := controller.NewDaemonJobBroadcastArgs(dj, clusterRole, image)
 
 	direct := []AnnotatedResource{
+		{Comment: fmt.Sprintf("Source Custom Resource: DaemonJob/%s", dj.Name), Object: dj},
 		{Comment: "ServiceAccount for the broadcast Job", Object: args.ServiceAccount()},
 		{Comment: "ClusterRoleBinding for the broadcast Job", Object: args.ClusterRoleBinding()},
 		{Comment: "Broadcast Job: spawns one worker Job per node at runtime", Object: args.Job()},
@@ -185,6 +186,7 @@ func generateDaemonCronJob(dcj *daemonjobv1.DaemonCronJob, nodes []string, image
 	args := controller.NewDaemonCronJobBroadcastArgs(dcj, clusterRole, image)
 
 	direct := []AnnotatedResource{
+		{Comment: fmt.Sprintf("Source Custom Resource: DaemonCronJob/%s", dcj.Name), Object: dcj},
 		{Comment: "ServiceAccount for the broadcast CronJob", Object: args.ServiceAccount()},
 		{Comment: "ClusterRoleBinding for the broadcast CronJob", Object: args.ClusterRoleBinding()},
 		{Comment: "Broadcast CronJob: on each trigger spawns a broadcast Job which creates per-node worker Jobs", Object: args.CronJob()},
@@ -224,7 +226,11 @@ func generateDaemonCronJob(dcj *daemonjobv1.DaemonCronJob, nodes []string, image
 func generateDaemonCronJobSet(dcjs *daemonjobv1.DaemonCronJobSet, nodes []string) *WriteResult {
 	args := controller.NewDaemonCronJobSetArgs(dcjs)
 
-	direct := make([]AnnotatedResource, 0, len(nodes))
+	direct := make([]AnnotatedResource, 0, len(nodes)+1)
+	direct = append(direct, AnnotatedResource{
+		Comment: fmt.Sprintf("Source Custom Resource: DaemonCronJobSet/%s", dcjs.Name),
+		Object:  dcjs,
+	})
 	for _, node := range nodes {
 		cronJob := args.NewCronJobForNode(node)
 		direct = append(direct, AnnotatedResource{

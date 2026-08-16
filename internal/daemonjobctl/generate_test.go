@@ -67,7 +67,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          rawDaemonJob,
 			inputNodes:        nodes,
 			goldenFile:        "daemonjob.golden.yaml",
-			expectedDirect:    3, // SA, CRB, broadcast Job
+			expectedDirect:    4, // Source DaemonJob, SA, CRB, broadcast Job
 			expectedSimulated: 2, // 2 worker jobs
 		},
 		{
@@ -75,7 +75,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          rawDaemonCronJob,
 			inputNodes:        nodes,
 			goldenFile:        "daemoncronjob.golden.yaml",
-			expectedDirect:    3, // SA, CRB, broadcast CronJob
+			expectedDirect:    4, // Source DaemonCronJob, SA, CRB, broadcast CronJob
 			expectedSimulated: 2, // 2 worker jobs
 		},
 		{
@@ -83,7 +83,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          rawDaemonCronJobSet,
 			inputNodes:        nodes,
 			goldenFile:        "daemoncronjobset.golden.yaml",
-			expectedDirect:    2, // 2 CronJobs
+			expectedDirect:    3, // Source DaemonCronJobSet, 2 CronJobs
 			expectedSimulated: 0,
 		},
 		{
@@ -91,7 +91,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          skeletonDJ,
 			inputNodes:        nodes,
 			goldenFile:        "skeleton_daemonjob.golden.yaml",
-			expectedDirect:    3, // SA, CRB, broadcast Job
+			expectedDirect:    4, // Source DaemonJob, SA, CRB, broadcast Job
 			expectedSimulated: 2, // 2 worker jobs
 		},
 		{
@@ -99,7 +99,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          skeletonDCJ,
 			inputNodes:        nodes,
 			goldenFile:        "skeleton_daemoncronjob.golden.yaml",
-			expectedDirect:    3, // SA, CRB, broadcast CronJob
+			expectedDirect:    4, // Source DaemonCronJob, SA, CRB, broadcast CronJob
 			expectedSimulated: 2, // 2 worker jobs
 		},
 		{
@@ -107,7 +107,7 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          skeletonDCJS,
 			inputNodes:        nodes,
 			goldenFile:        "skeleton_daemoncronjobset.golden.yaml",
-			expectedDirect:    2, // 2 CronJobs
+			expectedDirect:    3, // Source DaemonCronJobSet, 2 CronJobs
 			expectedSimulated: 0,
 		},
 		{
@@ -131,7 +131,7 @@ data:
 			inputRaw:          []byte(string(rawDaemonJob) + "\n---\n" + "apiVersion: v1\nkind: Secret\nmetadata:\n  name: my-secret\n  namespace: default\ntype: Opaque\n"),
 			inputNodes:        nodes,
 			goldenFile:        "multidoc.golden.yaml",
-			expectedDirect:    4, // SA, CRB, Job, Secret
+			expectedDirect:    5, // Source DaemonJob, SA, CRB, Job, Secret
 			expectedSimulated: 2, // 2 worker jobs
 		},
 	}

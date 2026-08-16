@@ -109,10 +109,12 @@ cat my-manifests.yaml | daemonjobctl generate -nodes node-a,node-b
 #### Output Structure
 
 - **`DaemonJob` / `DaemonCronJob`**:
-  1. `ServiceAccount` and `ClusterRoleBinding` used by the broadcast runner.
-  2. The broadcast `Job` or `CronJob` deployed by the operator.
-  3. A commented-out `# Worker Jobs (simulated)` block showing the per-node worker `Job` definitions that the broadcast runner will create on each targeted node.
+  1. The source Custom Resource (`DaemonJob` or `DaemonCronJob`).
+  2. `ServiceAccount` and `ClusterRoleBinding` used by the broadcast runner.
+  3. The broadcast `Job` or `CronJob` deployed by the operator.
+  4. A commented-out `# Worker Jobs (simulated)` block showing the per-node worker `Job` definitions that the broadcast runner will create on each targeted node.
 - **`DaemonCronJobSet`**:
-  - Direct per-node `CronJob` definitions for each targeted node.
+  1. The source Custom Resource (`DaemonCronJobSet`).
+  2. Direct per-node `CronJob` definitions for each targeted node.
 - **Other Resources (Pass-through)**:
   - Any standard Kubernetes resources (e.g. `ConfigMap`, `Secret`) in the input stream are passed through untouched.
