@@ -24,6 +24,7 @@ import (
 	"github.com/berquerant/daemonjob/internal/daemonjobctl"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"sigs.k8s.io/yaml"
 )
 
 var updateGolden = flag.Bool("update", false, "update .golden.yaml files")
@@ -42,6 +43,15 @@ func TestGenerate(t *testing.T) {
 	require.NoError(t, err)
 
 	rawDaemonCronJobSet, err := os.ReadFile("../../config/samples/daemonjob_v1_daemoncronjobset.yaml")
+	require.NoError(t, err)
+
+	skeletonDJ, err := yaml.Marshal(daemonjobctl.DaemonJobSkeleton())
+	require.NoError(t, err)
+
+	skeletonDCJ, err := yaml.Marshal(daemonjobctl.DaemonCronJobSkeleton())
+	require.NoError(t, err)
+
+	skeletonDCJS, err := yaml.Marshal(daemonjobctl.DaemonCronJobSetSkeleton())
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -73,6 +83,30 @@ func TestGenerate(t *testing.T) {
 			inputRaw:          rawDaemonCronJobSet,
 			inputNodes:        nodes,
 			goldenFile:        "daemoncronjobset.golden.yaml",
+			expectedDirect:    2, // 2 CronJobs
+			expectedSimulated: 0,
+		},
+		{
+			name:              "Skeleton DaemonJob",
+			inputRaw:          skeletonDJ,
+			inputNodes:        nodes,
+			goldenFile:        "skeleton_daemonjob.golden.yaml",
+			expectedDirect:    3, // SA, CRB, broadcast Job
+			expectedSimulated: 2, // 2 worker jobs
+		},
+		{
+			name:              "Skeleton DaemonCronJob",
+			inputRaw:          skeletonDCJ,
+			inputNodes:        nodes,
+			goldenFile:        "skeleton_daemoncronjob.golden.yaml",
+			expectedDirect:    3, // SA, CRB, broadcast CronJob
+			expectedSimulated: 2, // 2 worker jobs
+		},
+		{
+			name:              "Skeleton DaemonCronJobSet",
+			inputRaw:          skeletonDCJS,
+			inputNodes:        nodes,
+			goldenFile:        "skeleton_daemoncronjobset.golden.yaml",
 			expectedDirect:    2, // 2 CronJobs
 			expectedSimulated: 0,
 		},
