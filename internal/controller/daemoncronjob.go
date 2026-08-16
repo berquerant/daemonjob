@@ -46,7 +46,7 @@ type DaemonCronJobBroadcastArgs struct {
 	Image           string
 }
 
-func (a DaemonCronJobBroadcastArgs) asDaemonJob() *daemonjobv1.DaemonJob {
+func (a DaemonCronJobBroadcastArgs) AsDaemonJob() *daemonjobv1.DaemonJob {
 	d := a.DaemonCronJob.DeepCopy()
 	x := new(daemonjobv1.DaemonJob)
 
@@ -65,7 +65,7 @@ func (a DaemonCronJobBroadcastArgs) asDaemonJob() *daemonjobv1.DaemonJob {
 }
 
 func (a DaemonCronJobBroadcastArgs) daemonJobArgs() *DaemonJobBroadcastArgs {
-	return NewDaemonJobBroadcastArgs(a.asDaemonJob(), a.ClusterRoleName, a.Image)
+	return NewDaemonJobBroadcastArgs(a.AsDaemonJob(), a.ClusterRoleName, a.Image)
 }
 
 func (a DaemonCronJobBroadcastArgs) fixCommonLabels(d map[string]string) {
