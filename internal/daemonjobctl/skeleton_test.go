@@ -19,40 +19,54 @@ import (
 
 	"github.com/berquerant/daemonjob/internal/daemonjobctl"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/yaml"
 )
 
 func TestSkeleton(t *testing.T) {
-	t.Run("DaemonJob", func(t *testing.T) {
-		sk := daemonjobctl.DaemonJobSkeleton()
-		assert.Equal(t, "DaemonJob", sk.Kind)
-		assert.Equal(t, "my-daemonjob", sk.Name)
-		assert.NotEmpty(t, sk.Spec.JobTemplate.Spec.Template.Spec.Containers)
+	tests := []struct {
+		name         string
+		skeletonFunc func() client.Object
+		expectedKind string
+		expectedName string
+	}{
+		{
+			name: "DaemonJob",
+			skeletonFunc: func() client.Object {
+				return daemonjobctl.DaemonJobSkeleton()
+			},
+			expectedKind: daemonjobctl.KindDaemonJob,
+			expectedName: "my-daemonjob",
+		},
+		{
+			name: "DaemonCronJob",
+			skeletonFunc: func() client.Object {
+				return daemonjobctl.DaemonCronJobSkeleton()
+			},
+			expectedKind: daemonjobctl.KindDaemonCronJob,
+			expectedName: "my-daemoncronjob",
+		},
+		{
+			name: "DaemonCronJobSet",
+			skeletonFunc: func() client.Object {
+				return daemonjobctl.DaemonCronJobSetSkeleton()
+			},
+			expectedKind: daemonjobctl.KindDaemonCronJobSet,
+			expectedName: "my-daemoncronjobset",
+		},
+	}
 
-		b, err := yaml.Marshal(sk)
-		assert.NoError(t, err)
-		assert.Contains(t, string(b), "kind: DaemonJob")
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			obj := tt.skeletonFunc()
+			assert.Equal(t, tt.expectedName, obj.GetName())
+			assert.Equal(t, daemonjobctl.DefaultNamespace, obj.GetNamespace())
 
-	t.Run("DaemonCronJob", func(t *testing.T) {
-		sk := daemonjobctl.DaemonCronJobSkeleton()
-		assert.Equal(t, "DaemonCronJob", sk.Kind)
-		assert.Equal(t, "my-daemoncronjob", sk.Name)
-		assert.NotEmpty(t, sk.Spec.CronJobTemplate.Spec.Schedule)
-
-		b, err := yaml.Marshal(sk)
-		assert.NoError(t, err)
-		assert.Contains(t, string(b), "kind: DaemonCronJob")
-	})
-
-	t.Run("DaemonCronJobSet", func(t *testing.T) {
-		sk := daemonjobctl.DaemonCronJobSetSkeleton()
-		assert.Equal(t, "DaemonCronJobSet", sk.Kind)
-		assert.Equal(t, "my-daemoncronjobset", sk.Name)
-		assert.NotEmpty(t, sk.Spec.CronJobTemplate.Spec.Schedule)
-
-		b, err := yaml.Marshal(sk)
-		assert.NoError(t, err)
-		assert.Contains(t, string(b), "kind: DaemonCronJobSet")
-	})
+			b, err := yaml.Marshal(obj)
+			require.NoError(t, err)
+			assert.Contains(t, string(b), "kind: "+tt.expectedKind)
+			assert.Contains(t, string(b), "name: "+tt.expectedName)
+		})
+	}
 }

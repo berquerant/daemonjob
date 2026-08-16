@@ -31,79 +31,78 @@ func TestGenerate(t *testing.T) {
 	)
 	nodes := []string{"node-1", "node-2"}
 
-	t.Run("DaemonJob", func(t *testing.T) {
-		raw, err := os.ReadFile("../../config/samples/daemonjob_v1_daemonjob.yaml")
-		require.NoError(t, err)
+	rawDaemonJob, err := os.ReadFile("../../config/samples/daemonjob_v1_daemonjob.yaml")
+	require.NoError(t, err)
 
-		res, err := daemonjobctl.Generate(raw, nodes, image, role)
-		require.NoError(t, err)
-		assert.Len(t, res.Direct, 3)    // SA, CRB, Job (broadcast)
-		assert.Len(t, res.Simulated, 2) // 2 worker jobs
+	rawDaemonCronJob, err := os.ReadFile("../../config/samples/daemonjob_v1_daemoncronjob.yaml")
+	require.NoError(t, err)
 
-		var buf bytes.Buffer
-		err = daemonjobctl.WriteYAML(&buf, res)
-		require.NoError(t, err)
-		out := buf.String()
+	rawDaemonCronJobSet, err := os.ReadFile("../../config/samples/daemonjob_v1_daemoncronjobset.yaml")
+	require.NoError(t, err)
 
-		// Direct checks
-		assert.Contains(t, out, "kind: ServiceAccount")
-		assert.Contains(t, out, "kind: ClusterRoleBinding")
-		assert.Contains(t, out, "kind: Job")
-		assert.Contains(t, out, "name: default-daemonjob-sample-dj") // CRB name prefix uses default namespace
-		assert.Contains(t, out, "namespace: default")
-
-		// Simulated checks (commented out)
-		assert.Contains(t, out, "# Worker Jobs (simulated)")
-		assert.Contains(t, out, "# --- node: node-1")
-		assert.Contains(t, out, "# --- node: node-2")
-		assert.Contains(t, out, "#   name: daemonjob-sample-dj-node-1")
-		assert.Contains(t, out, "#   namespace: default")
-	})
-
-	t.Run("DaemonCronJob", func(t *testing.T) {
-		raw, err := os.ReadFile("../../config/samples/daemonjob_v1_daemoncronjob.yaml")
-		require.NoError(t, err)
-
-		res, err := daemonjobctl.Generate(raw, nodes, image, role)
-		require.NoError(t, err)
-		assert.Len(t, res.Direct, 3)    // SA, CRB, CronJob (broadcast)
-		assert.Len(t, res.Simulated, 2) // 2 worker jobs
-
-		var buf bytes.Buffer
-		err = daemonjobctl.WriteYAML(&buf, res)
-		require.NoError(t, err)
-		out := buf.String()
-
-		assert.Contains(t, out, "kind: ServiceAccount")
-		assert.Contains(t, out, "kind: ClusterRoleBinding")
-		assert.Contains(t, out, "kind: CronJob")
-		assert.Contains(t, out, "# Worker Jobs (simulated)")
-		assert.Contains(t, out, "# --- node: node-1")
-		assert.Contains(t, out, "# --- node: node-2")
-	})
-
-	t.Run("DaemonCronJobSet", func(t *testing.T) {
-		raw, err := os.ReadFile("../../config/samples/daemonjob_v1_daemoncronjobset.yaml")
-		require.NoError(t, err)
-
-		res, err := daemonjobctl.Generate(raw, nodes, image, role)
-		require.NoError(t, err)
-		assert.Len(t, res.Direct, 2) // 2 CronJobs (one per node)
-		assert.Empty(t, res.Simulated)
-
-		var buf bytes.Buffer
-		err = daemonjobctl.WriteYAML(&buf, res)
-		require.NoError(t, err)
-		out := buf.String()
-
-		assert.Contains(t, out, "kind: CronJob")
-		assert.Contains(t, out, "daemoncronjobset-sample-node-1-dcjs")
-		assert.Contains(t, out, "daemoncronjobset-sample-node-2-dcjs")
-		assert.NotContains(t, out, "# Worker Jobs (simulated)")
-	})
-
-	t.Run("PassThrough NonCustomResource", func(t *testing.T) {
-		raw := []byte(`
+	tests := []struct {
+		name              string
+		inputRaw          []byte
+		inputNodes        []string
+		expectedDirect    int
+		expectedSimulated int
+		expectedContains  []string
+		expectedOmits     []string
+	}{
+		{
+			name:              "DaemonJob",
+			inputRaw:          rawDaemonJob,
+			inputNodes:        nodes,
+			expectedDirect:    3, // SA, CRB, broadcast Job
+			expectedSimulated: 2, // 2 worker jobs
+			expectedContains: []string{
+				"kind: ServiceAccount",
+				"kind: ClusterRoleBinding",
+				"kind: Job",
+				"name: default-daemonjob-sample-dj",
+				"namespace: default",
+				"# Worker Jobs (simulated)",
+				"# --- node: node-1",
+				"# --- node: node-2",
+				"#   name: daemonjob-sample-dj-node-1",
+				"#   namespace: default",
+			},
+		},
+		{
+			name:              "DaemonCronJob",
+			inputRaw:          rawDaemonCronJob,
+			inputNodes:        nodes,
+			expectedDirect:    3, // SA, CRB, broadcast CronJob
+			expectedSimulated: 2, // 2 worker jobs
+			expectedContains: []string{
+				"kind: ServiceAccount",
+				"kind: ClusterRoleBinding",
+				"kind: CronJob",
+				"name: default-daemoncronjob-sample-dcj",
+				"namespace: default",
+				"# Worker Jobs (simulated)",
+				"# --- node: node-1",
+				"# --- node: node-2",
+			},
+		},
+		{
+			name:              "DaemonCronJobSet",
+			inputRaw:          rawDaemonCronJobSet,
+			inputNodes:        nodes,
+			expectedDirect:    2, // 2 CronJobs
+			expectedSimulated: 0,
+			expectedContains: []string{
+				"kind: CronJob",
+				"daemoncronjobset-sample-node-1-dcjs",
+				"daemoncronjobset-sample-node-2-dcjs",
+			},
+			expectedOmits: []string{
+				"# Worker Jobs (simulated)",
+			},
+		},
+		{
+			name: "PassThrough NonCustomResource",
+			inputRaw: []byte(`
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -111,49 +110,55 @@ metadata:
   namespace: my-ns
 data:
   key: value
-`)
-		res, err := daemonjobctl.Generate(raw, nodes, image, role)
-		require.NoError(t, err)
-		assert.Len(t, res.Direct, 1)
-		assert.Empty(t, res.Simulated)
+`),
+			inputNodes:        nodes,
+			expectedDirect:    1,
+			expectedSimulated: 0,
+			expectedContains: []string{
+				"kind: ConfigMap",
+				"name: my-config",
+				"namespace: my-ns",
+				"key: value",
+				"# Pass-through: ConfigMap/my-config",
+			},
+			expectedOmits: []string{
+				"# Worker Jobs (simulated)",
+			},
+		},
+		{
+			name:              "MultiDocument With CustomResource And PassThrough",
+			inputRaw:          []byte(string(rawDaemonJob) + "\n---\n" + "apiVersion: v1\nkind: Secret\nmetadata:\n  name: my-secret\n  namespace: default\ntype: Opaque\n"),
+			inputNodes:        nodes,
+			expectedDirect:    4, // SA, CRB, Job, Secret
+			expectedSimulated: 2, // 2 worker jobs
+			expectedContains: []string{
+				"kind: ServiceAccount",
+				"kind: Secret",
+				"name: my-secret",
+				"# Pass-through: Secret/my-secret",
+				"# Worker Jobs (simulated)",
+			},
+		},
+	}
 
-		var buf bytes.Buffer
-		err = daemonjobctl.WriteYAML(&buf, res)
-		require.NoError(t, err)
-		out := buf.String()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := daemonjobctl.Generate(tt.inputRaw, tt.inputNodes, image, role)
+			require.NoError(t, err)
+			assert.Len(t, res.Direct, tt.expectedDirect)
+			assert.Len(t, res.Simulated, tt.expectedSimulated)
 
-		assert.Contains(t, out, "kind: ConfigMap")
-		assert.Contains(t, out, "name: my-config")
-		assert.Contains(t, out, "namespace: my-ns")
-		assert.Contains(t, out, "key: value")
-		assert.Contains(t, out, "# Pass-through: ConfigMap/my-config")
-	})
+			var buf bytes.Buffer
+			err = daemonjobctl.WriteYAML(&buf, res)
+			require.NoError(t, err)
+			out := buf.String()
 
-	t.Run("MultiDocument With CustomResource And PassThrough", func(t *testing.T) {
-		rawDJ, err := os.ReadFile("../../config/samples/daemonjob_v1_daemonjob.yaml")
-		require.NoError(t, err)
-
-		multiDoc := string(rawDJ) + "\n---\n" + `
-apiVersion: v1
-kind: Secret
-metadata:
-  name: my-secret
-  namespace: default
-type: Opaque
-`
-		res, err := daemonjobctl.Generate([]byte(multiDoc), nodes, image, role)
-		require.NoError(t, err)
-		assert.Len(t, res.Direct, 4)    // SA, CRB, Job, Secret
-		assert.Len(t, res.Simulated, 2) // 2 worker jobs
-
-		var buf bytes.Buffer
-		err = daemonjobctl.WriteYAML(&buf, res)
-		require.NoError(t, err)
-		out := buf.String()
-
-		assert.Contains(t, out, "kind: ServiceAccount")
-		assert.Contains(t, out, "kind: Secret")
-		assert.Contains(t, out, "name: my-secret")
-		assert.Contains(t, out, "# Pass-through: Secret/my-secret")
-	})
+			for _, exp := range tt.expectedContains {
+				assert.Contains(t, out, exp)
+			}
+			for _, omit := range tt.expectedOmits {
+				assert.NotContains(t, out, omit)
+			}
+		})
+	}
 }
