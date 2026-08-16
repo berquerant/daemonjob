@@ -166,7 +166,8 @@ type: Opaque
 # These Jobs are created at runtime by the broadcast container, not directly by the controller.
 # NOTE: ownerReference.uid is a placeholder (00000000-0000-0000-0000-000000000000); the actual UID is assigned at runtime.
 #
-# --- node: node-1
+# ---
+# node: node-1
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
@@ -238,7 +239,8 @@ type: Opaque
 #         key: node.kubernetes.io/unschedulable
 #         operator: Exists
 # status: {}
-# --- node: node-2
+# ---
+# node: node-2
 # apiVersion: batch/v1
 # kind: Job
 # metadata:

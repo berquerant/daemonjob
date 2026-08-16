@@ -111,13 +111,14 @@ func WriteYAML(w io.Writer, r *WriteResult) error {
 			return fmt.Errorf("marshal simulated %T: %w", ar.Object, err)
 		}
 
-		// Per-resource separator with node annotation.
-		separator := "#"
-		if ar.Comment != "" {
-			separator = fmt.Sprintf("# --- %s", ar.Comment)
-		}
-		if _, err := fmt.Fprintln(w, separator); err != nil {
+		// Output standard separator without trailing characters, followed by comment if present.
+		if _, err := fmt.Fprintln(w, "# ---"); err != nil {
 			return err
+		}
+		if ar.Comment != "" {
+			if _, err := fmt.Fprintf(w, "# %s\n", ar.Comment); err != nil {
+				return err
+			}
 		}
 
 		// Each YAML line is prefixed with "# ".
