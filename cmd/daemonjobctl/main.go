@@ -18,6 +18,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -44,7 +45,7 @@ func main() {
 	case "-h", "--help", "help":
 		printUsage()
 	default:
-		fmt.Fprintf(os.Stderr, "daemonjobctl: unknown command %q\n\n", os.Args[1])
+		slog.Error("unknown command", "command", os.Args[1])
 		printUsage()
 		os.Exit(1)
 	}
@@ -89,13 +90,12 @@ Examples:
 func runSkeleton(args []string) {
 	fs := flag.NewFlagSet("skeleton", flag.ExitOnError)
 	if err := fs.Parse(args); err != nil {
-		fmt.Fprintf(os.Stderr, "skeleton: %v\n", err)
+		slog.Error("failed to parse flags", "err", err)
 		os.Exit(1)
 	}
 
 	if fs.NArg() < 1 {
-		fmt.Fprintln(os.Stderr, "skeleton: missing required argument: kind")
-		fmt.Fprintln(os.Stderr, "  usage: daemonjobctl skeleton <daemonjob|daemoncronjob|daemoncronjobset>")
+		slog.Error("missing required argument: kind")
 		os.Exit(1)
 	}
 
@@ -110,18 +110,17 @@ func runSkeleton(args []string) {
 	case "daemoncronjobset":
 		obj = daemonjobctl.DaemonCronJobSetSkeleton()
 	default:
-		fmt.Fprintf(os.Stderr, "skeleton: unknown kind %q\n", kind)
-		fmt.Fprintln(os.Stderr, "  supported: daemonjob, daemoncronjob, daemoncronjobset")
+		slog.Error("unknown kind", "kind", kind, "supported", "daemonjob, daemoncronjob, daemoncronjobset")
 		os.Exit(1)
 	}
 
 	b, err := yaml.Marshal(obj)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "skeleton: marshal error: %v\n", err)
+		slog.Error("marshal error", "err", err)
 		os.Exit(1)
 	}
 	if _, err := os.Stdout.Write(b); err != nil {
-		fmt.Fprintf(os.Stderr, "skeleton: write error: %v\n", err)
+		slog.Error("write error", "err", err)
 		os.Exit(1)
 	}
 }
@@ -134,12 +133,12 @@ func runGenerate(args []string) {
 	role := fs.String("broadcast-role", defaultClusterRole, "Broadcast ClusterRole name")
 
 	if err := fs.Parse(args); err != nil {
-		fmt.Fprintf(os.Stderr, "generate: %v\n", err)
+		slog.Error("failed to parse flags", "err", err)
 		os.Exit(1)
 	}
 
 	if *nodes == "" {
-		fmt.Fprintln(os.Stderr, "generate: -nodes is required")
+		slog.Error("-nodes is required")
 		os.Exit(1)
 	}
 
@@ -152,7 +151,7 @@ func runGenerate(args []string) {
 		}
 	}
 	if len(nodeList) == 0 {
-		fmt.Fprintln(os.Stderr, "generate: -nodes must contain at least one node name")
+		slog.Error("-nodes must contain at least one node name")
 		os.Exit(1)
 	}
 
@@ -162,25 +161,25 @@ func runGenerate(args []string) {
 	if *file != "" {
 		raw, err = os.ReadFile(*file)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "generate: read file %q: %v\n", *file, err)
+			slog.Error("failed to read input file", "file", *file, "err", err)
 			os.Exit(1)
 		}
 	} else {
 		raw, err = io.ReadAll(os.Stdin)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "generate: read stdin: %v\n", err)
+			slog.Error("failed to read from stdin", "err", err)
 			os.Exit(1)
 		}
 	}
 
 	result, err := daemonjobctl.Generate(raw, nodeList, *image, *role)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "generate: %v\n", err)
+		slog.Error("failed to generate manifests", "err", err)
 		os.Exit(1)
 	}
 
 	if err := daemonjobctl.WriteYAML(os.Stdout, result); err != nil {
-		fmt.Fprintf(os.Stderr, "generate: write: %v\n", err)
+		slog.Error("failed to write output YAML", "err", err)
 		os.Exit(1)
 	}
 }
