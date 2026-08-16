@@ -38,6 +38,8 @@ func main() {
 	}
 
 	switch os.Args[1] {
+	case "version":
+		runVersion()
 	case "skeleton":
 		runSkeleton(os.Args[2:])
 	case "generate":
@@ -58,6 +60,8 @@ Usage:
   daemonjobctl <command> [flags]
 
 Commands:
+  version           Print version and Go runtime information.
+
   skeleton <kind>   Output a skeleton YAML for the given custom resource kind.
                     Supported kinds: daemonjob | daemoncronjob | daemoncronjobset
 
@@ -85,6 +89,10 @@ Examples:
   daemonjobctl generate -f my-daemonjob.yaml -nodes node1,node2,node3
   cat my-daemonjob.yaml | daemonjobctl generate -nodes node1,node2
 `, defaultBroadcastImage, defaultClusterRole)
+}
+
+func runVersion() {
+	fmt.Println(daemonjobctl.GetVersion().String())
 }
 
 func runSkeleton(args []string) {

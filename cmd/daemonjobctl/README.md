@@ -4,6 +4,7 @@
 
 ## Features
 
+- **`version`**: Prints the application version (from the project VERSION) and Go runtime version.
 - **`skeleton`**: Generates a minimal, ready-to-use skeleton YAML manifest for any daemonjob Custom Resource.
 - **`generate`**: Simulates and previews the actual Kubernetes resources (ServiceAccount, ClusterRoleBinding, broadcast Jobs/CronJobs, and per-node worker Jobs) that would be created in the cluster given a Custom Resource manifest and a list of target node names.
   - Passes through non-daemonjob Kubernetes resources (such as `ConfigMap`, `Secret`, `Service`, etc.) unchanged.
@@ -33,7 +34,7 @@ The binary will be generated at `./bin/daemonjobctl`.
 Alternatively, build only `daemonjobctl`:
 
 ```sh
-go build -o bin/daemonjobctl ./cmd/daemonjobctl/main.go
+go build -ldflags="-X 'github.com/berquerant/daemonjob/internal/daemonjobctl.Version=$(./hack/version.sh)'" -o bin/daemonjobctl ./cmd/daemonjobctl/main.go
 ```
 
 ## Usage
@@ -45,6 +46,8 @@ Usage:
   daemonjobctl <command> [flags]
 
 Commands:
+  version           Print version and Go runtime information.
+
   skeleton <kind>   Output a skeleton YAML for the given custom resource kind.
                     Supported kinds: daemonjob | daemoncronjob | daemoncronjobset
 

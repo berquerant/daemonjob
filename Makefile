@@ -196,7 +196,7 @@ clean-binaries: ## Clean all binaries.
 build: manifests generate docs fmt vet ## Build manager binary.
 	go build -o bin/manager cmd/controller/main.go
 	go build -o bin/broadcast cmd/broadcast/main.go
-	go build -o bin/daemonjobctl cmd/daemonjobctl/main.go
+	go build -ldflags="-X 'github.com/berquerant/daemonjob/internal/daemonjobctl.Version=$(VERSION)'" -o bin/daemonjobctl cmd/daemonjobctl/main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
