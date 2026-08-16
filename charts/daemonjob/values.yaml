@@ -1,7 +1,7 @@
 controllerManager:
   affinity: {}
   broadcastImageRepository: ghcr.io/berquerant/daemonjob/broadcast
-  broadcastImageTag: 0.0.3
+  broadcastImageTag: 0.0.4
   broadcastRole: ""
   manager:
     args:
@@ -16,7 +16,7 @@ controllerManager:
       readOnlyRootFilesystem: true
     image:
       repository: ghcr.io/berquerant/daemonjob/manager
-      tag: 0.0.3
+      tag: 0.0.4
     resources:
       limits:
         cpu: 500m
