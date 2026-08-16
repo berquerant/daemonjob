@@ -58,8 +58,16 @@ type DaemonJobBroadcastArgs struct {
 	Image           string
 }
 
-func (a DaemonJobBroadcastArgs) serviceAccountName() string {
+func (a DaemonJobBroadcastArgs) ResourceName() string {
 	return a.DaemonJob.Name + "-" + DaemonJobResourceSuffix
+}
+
+func (a DaemonJobBroadcastArgs) JobName() string {
+	return a.ResourceName()
+}
+
+func (a DaemonJobBroadcastArgs) serviceAccountName() string {
+	return a.ResourceName()
 }
 
 func (a DaemonJobBroadcastArgs) namespace() string {
@@ -119,7 +127,7 @@ func (a DaemonJobBroadcastArgs) Job() *batchv1.Job {
 	// metadata
 	//
 	meta := &job.ObjectMeta
-	meta.Name = dJob.Name + "-" + DaemonJobResourceSuffix
+	meta.Name = a.JobName()
 	meta.Namespace = a.namespace()
 	meta.Annotations = dJobTmpl.Metadata.Annotations
 	meta.Labels = dJobTmpl.Metadata.Labels

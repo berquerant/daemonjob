@@ -27,10 +27,12 @@ daemonjob/
 ├── broadcast/              # Broadcast container Dockerfile
 ├── cmd/
 │   ├── broadcast/          # Broadcast CLI entrypoint (main.go)
-│   └── controller/         # Controller Manager entrypoint (main.go)
+│   ├── controller/         # Controller Manager entrypoint (main.go)
+│   └── daemonjobctl/       # daemonjobctl CLI entrypoint (main.go)
 ├── internal/
 │   ├── broadcast/          # Broadcast runner logic & unit tests
 │   ├── controller/         # Reconciler logic & unit tests
+│   ├── daemonjobctl/       # daemonjobctl logic, golden tests, testdata/
 │   └── util/               # Internal utilities
 ├── config/                 # Kustomize manifests (crd, default, manager, rbac, samples)
 ├── manifests/              # Consolidated installation manifest (install.yaml)
@@ -55,6 +57,8 @@ When modifying CRD structs, specifications, or manifests, you MUST run the corre
    - Run `make build-installer` (updates `manifests/install.yaml`)
    - Run `make chart` (updates `charts/daemonjob/`)
    - Run `make docs` (updates `docs/`)
+3. **Golden Test Files**:
+   - When modifying `daemonjobctl` output specifications or templates, update golden files via `make golden`.
 
 ---
 

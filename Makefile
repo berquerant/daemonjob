@@ -142,6 +142,10 @@ lint: ## Run linters.
 test: manifests generate fmt ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST))" go test $$(go list ./... | grep -v /e2e) -coverprofile cover.out
 
+.PHONY: golden
+golden: fmt ## Update golden test files.
+	go test ./internal/daemonjobctl/... -update
+
 # TODO(user): To use a different vendor for e2e tests, modify the setup under 'tests/e2e'.
 # The default setup assumes K0s is pre-installed and builds/loads the Manager Docker image locally.
 # kubectl kuberc is disabled by default for test isolation; enable with:
@@ -192,6 +196,7 @@ clean-binaries: ## Clean all binaries.
 build: manifests generate docs fmt vet ## Build manager binary.
 	go build -o bin/manager cmd/controller/main.go
 	go build -o bin/broadcast cmd/broadcast/main.go
+	go build -ldflags="-X 'github.com/berquerant/daemonjob/internal/daemonjobctl.Version=$(VERSION)'" -o bin/daemonjobctl cmd/daemonjobctl/main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.

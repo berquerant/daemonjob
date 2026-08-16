@@ -46,7 +46,7 @@ type DaemonCronJobBroadcastArgs struct {
 	Image           string
 }
 
-func (a DaemonCronJobBroadcastArgs) asDaemonJob() *daemonjobv1.DaemonJob {
+func (a DaemonCronJobBroadcastArgs) AsDaemonJob() *daemonjobv1.DaemonJob {
 	d := a.DaemonCronJob.DeepCopy()
 	x := new(daemonjobv1.DaemonJob)
 
@@ -65,7 +65,7 @@ func (a DaemonCronJobBroadcastArgs) asDaemonJob() *daemonjobv1.DaemonJob {
 }
 
 func (a DaemonCronJobBroadcastArgs) daemonJobArgs() *DaemonJobBroadcastArgs {
-	return NewDaemonJobBroadcastArgs(a.asDaemonJob(), a.ClusterRoleName, a.Image)
+	return NewDaemonJobBroadcastArgs(a.AsDaemonJob(), a.ClusterRoleName, a.Image)
 }
 
 func (a DaemonCronJobBroadcastArgs) fixCommonLabels(d map[string]string) {
@@ -74,8 +74,20 @@ func (a DaemonCronJobBroadcastArgs) fixCommonLabels(d map[string]string) {
 	d["app.kubernetes.io/instance"] = d[DaemonJobLabelDaemonCronJobName]
 }
 
-func (a DaemonCronJobBroadcastArgs) serviceAccountName() string {
+func (a DaemonCronJobBroadcastArgs) ResourceName() string {
 	return a.DaemonCronJob.Name + "-" + DaemonCronJobResourceSuffix
+}
+
+func (a DaemonCronJobBroadcastArgs) JobName() string {
+	return a.ResourceName()
+}
+
+func (a DaemonCronJobBroadcastArgs) CronJobName() string {
+	return a.ResourceName()
+}
+
+func (a DaemonCronJobBroadcastArgs) serviceAccountName() string {
+	return a.ResourceName()
 }
 
 func (a DaemonCronJobBroadcastArgs) ClusterRoleBinding() *rbacv1.ClusterRoleBinding {
@@ -95,7 +107,7 @@ func (a DaemonCronJobBroadcastArgs) ServiceAccount() *corev1.ServiceAccount {
 
 func (a DaemonCronJobBroadcastArgs) Job() *batchv1.Job {
 	job := a.daemonJobArgs().Job()
-	job.Name = a.DaemonCronJob.Name + "-" + DaemonCronJobResourceSuffix
+	job.Name = a.JobName()
 	a.fixCommonLabels(job.Labels)
 	a.fixCommonLabels(job.Spec.Template.Labels)
 	job.Spec.Template.Spec.ServiceAccountName = a.serviceAccountName()
@@ -114,16 +126,12 @@ func (a DaemonCronJobBroadcastArgs) Job() *batchv1.Job {
 	return job
 }
 
-func (a DaemonCronJobBroadcastArgs) cronJobName() string {
-	return a.DaemonCronJob.Name + "-" + DaemonCronJobResourceSuffix
-}
-
 func (a DaemonCronJobBroadcastArgs) CronJob() *batchv1.CronJob {
 	cronJob := new(batchv1.CronJob)
 	dSpec := a.DaemonCronJob.Spec.CronJobTemplate.Spec.DeepCopy()
 	job := a.Job()
 
-	cronJob.Name = a.cronJobName()
+	cronJob.Name = a.CronJobName()
 	cronJob.Namespace = a.DaemonCronJob.Namespace
 	cronJob.Annotations = a.DaemonCronJob.Spec.CronJobTemplate.Metadata.Annotations
 	cronJob.Labels = a.DaemonCronJob.Spec.CronJobTemplate.Metadata.Labels

@@ -45,6 +45,7 @@ helm install -n daemonjob-system --create-namespace oci://ghcr.io/berquerant/dae
 
 - [CRDs](docs)
 - [Samples](config/samples)
+- [daemonjobctl CLI](cmd/daemonjobctl/README.md)
 
 ## Development
 

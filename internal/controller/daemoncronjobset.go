@@ -109,7 +109,7 @@ func (a DaemonCronJobSetArgs) ListNodes(ctx context.Context, c client.Client) ([
 	return names, nil
 }
 
-func (a DaemonCronJobSetArgs) newCronJob(nodeName string) *batchv1.CronJob {
+func (a DaemonCronJobSetArgs) NewCronJobForNode(nodeName string) *batchv1.CronJob {
 	var (
 		cronJob = new(batchv1.CronJob)
 		d       = a.DaemonCronJobSet.DeepCopy()
@@ -182,7 +182,7 @@ func (a DaemonCronJobSetArgs) CronJobs(ctx context.Context, c client.Client) ([]
 	}
 	cronJobs := make([]*batchv1.CronJob, len(nodeNames))
 	for i, nodeName := range nodeNames {
-		cronJobs[i] = a.newCronJob(nodeName)
+		cronJobs[i] = a.NewCronJobForNode(nodeName)
 	}
 	return cronJobs, nil
 }
