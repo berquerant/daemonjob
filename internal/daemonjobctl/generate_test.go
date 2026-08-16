@@ -16,13 +16,17 @@ package daemonjobctl_test
 
 import (
 	"bytes"
+	"flag"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/berquerant/daemonjob/internal/daemonjobctl"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+var updateGolden = flag.Bool("update", false, "update .golden.yaml files")
 
 func TestGenerate(t *testing.T) {
 	const (
@@ -44,61 +48,33 @@ func TestGenerate(t *testing.T) {
 		name              string
 		inputRaw          []byte
 		inputNodes        []string
+		goldenFile        string
 		expectedDirect    int
 		expectedSimulated int
-		expectedContains  []string
-		expectedOmits     []string
 	}{
 		{
 			name:              "DaemonJob",
 			inputRaw:          rawDaemonJob,
 			inputNodes:        nodes,
+			goldenFile:        "daemonjob.golden.yaml",
 			expectedDirect:    3, // SA, CRB, broadcast Job
 			expectedSimulated: 2, // 2 worker jobs
-			expectedContains: []string{
-				"kind: ServiceAccount",
-				"kind: ClusterRoleBinding",
-				"kind: Job",
-				"name: default-daemonjob-sample-dj",
-				"namespace: default",
-				"# Worker Jobs (simulated)",
-				"# --- node: node-1",
-				"# --- node: node-2",
-				"#   name: daemonjob-sample-dj-node-1",
-				"#   namespace: default",
-			},
 		},
 		{
 			name:              "DaemonCronJob",
 			inputRaw:          rawDaemonCronJob,
 			inputNodes:        nodes,
+			goldenFile:        "daemoncronjob.golden.yaml",
 			expectedDirect:    3, // SA, CRB, broadcast CronJob
 			expectedSimulated: 2, // 2 worker jobs
-			expectedContains: []string{
-				"kind: ServiceAccount",
-				"kind: ClusterRoleBinding",
-				"kind: CronJob",
-				"name: default-daemoncronjob-sample-dcj",
-				"namespace: default",
-				"# Worker Jobs (simulated)",
-				"# --- node: node-1",
-				"# --- node: node-2",
-			},
 		},
 		{
 			name:              "DaemonCronJobSet",
 			inputRaw:          rawDaemonCronJobSet,
 			inputNodes:        nodes,
+			goldenFile:        "daemoncronjobset.golden.yaml",
 			expectedDirect:    2, // 2 CronJobs
 			expectedSimulated: 0,
-			expectedContains: []string{
-				"kind: CronJob",
-				"daemoncronjobset-sample-node-1-dcjs",
-				"daemoncronjobset-sample-node-2-dcjs",
-			},
-			expectedOmits: []string{
-				"# Worker Jobs (simulated)",
-			},
 		},
 		{
 			name: "PassThrough NonCustomResource",
@@ -112,32 +88,17 @@ data:
   key: value
 `),
 			inputNodes:        nodes,
+			goldenFile:        "passthrough.golden.yaml",
 			expectedDirect:    1,
 			expectedSimulated: 0,
-			expectedContains: []string{
-				"kind: ConfigMap",
-				"name: my-config",
-				"namespace: my-ns",
-				"key: value",
-				"# Pass-through: ConfigMap/my-config",
-			},
-			expectedOmits: []string{
-				"# Worker Jobs (simulated)",
-			},
 		},
 		{
 			name:              "MultiDocument With CustomResource And PassThrough",
 			inputRaw:          []byte(string(rawDaemonJob) + "\n---\n" + "apiVersion: v1\nkind: Secret\nmetadata:\n  name: my-secret\n  namespace: default\ntype: Opaque\n"),
 			inputNodes:        nodes,
+			goldenFile:        "multidoc.golden.yaml",
 			expectedDirect:    4, // SA, CRB, Job, Secret
 			expectedSimulated: 2, // 2 worker jobs
-			expectedContains: []string{
-				"kind: ServiceAccount",
-				"kind: Secret",
-				"name: my-secret",
-				"# Pass-through: Secret/my-secret",
-				"# Worker Jobs (simulated)",
-			},
 		},
 	}
 
@@ -151,14 +112,17 @@ data:
 			var buf bytes.Buffer
 			err = daemonjobctl.WriteYAML(&buf, res)
 			require.NoError(t, err)
-			out := buf.String()
+			actual := buf.String()
 
-			for _, exp := range tt.expectedContains {
-				assert.Contains(t, out, exp)
+			goldenPath := filepath.Join("testdata", tt.goldenFile)
+			if *updateGolden {
+				err := os.WriteFile(goldenPath, buf.Bytes(), 0644)
+				require.NoError(t, err)
 			}
-			for _, omit := range tt.expectedOmits {
-				assert.NotContains(t, out, omit)
-			}
+
+			expected, err := os.ReadFile(goldenPath)
+			require.NoError(t, err, "golden file not found: %s. Run with -update to generate", goldenPath)
+			assert.Equal(t, string(expected), actual)
 		})
 	}
 }
