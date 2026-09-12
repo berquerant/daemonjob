@@ -23,7 +23,7 @@ A high-granularity scheduler that deploys individual CronJobs to each node, allo
 ### Prerequisites
 
 - direnv 2.37.1
-- go version v1.26.2+
+- go version v1.27.1+
 - docker version 29.4.2+
 - Access to a Kubernetes v1.35.3+ cluster.
 

@@ -18,21 +18,16 @@ import (
 	daemonjobv1 "github.com/berquerant/daemonjob/api/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // DaemonJobSkeleton returns a minimal but complete skeleton DaemonJob manifest.
 func DaemonJobSkeleton() *daemonjobv1.DaemonJob {
 	backoffLimit := int32(0)
 	return &daemonjobv1.DaemonJob{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: daemonjobv1.GroupVersion.String(),
-			Kind:       KindDaemonJob,
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-daemonjob",
-			Namespace: DefaultNamespace,
-		},
+		APIVersion: daemonjobv1.GroupVersion.String(),
+		Kind:       KindDaemonJob,
+		Name:       "my-daemonjob",
+		Namespace:  DefaultNamespace,
 		Spec: daemonjobv1.DaemonJobSpec{
 			NodeSelector: map[string]string{},
 			JobTemplate: daemonjobv1.DaemonJobTemplateSpec{
@@ -64,14 +59,10 @@ func DaemonJobSkeleton() *daemonjobv1.DaemonJob {
 func DaemonCronJobSkeleton() *daemonjobv1.DaemonCronJob {
 	backoffLimit := int32(0)
 	return &daemonjobv1.DaemonCronJob{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: daemonjobv1.GroupVersion.String(),
-			Kind:       KindDaemonCronJob,
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-daemoncronjob",
-			Namespace: DefaultNamespace,
-		},
+		APIVersion: daemonjobv1.GroupVersion.String(),
+		Kind:       KindDaemonCronJob,
+		Name:       "my-daemoncronjob",
+		Namespace:  DefaultNamespace,
 		Spec: daemonjobv1.DaemonCronJobSpec{
 			NodeSelector: map[string]string{},
 			CronJobTemplate: daemonjobv1.DaemonCronJobTemplateSpec{
@@ -108,14 +99,10 @@ func DaemonCronJobSkeleton() *daemonjobv1.DaemonCronJob {
 func DaemonCronJobSetSkeleton() *daemonjobv1.DaemonCronJobSet {
 	backoffLimit := int32(0)
 	return &daemonjobv1.DaemonCronJobSet{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: daemonjobv1.GroupVersion.String(),
-			Kind:       KindDaemonCronJobSet,
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-daemoncronjobset",
-			Namespace: DefaultNamespace,
-		},
+		APIVersion: daemonjobv1.GroupVersion.String(),
+		Kind:       KindDaemonCronJobSet,
+		Name:       "my-daemoncronjobset",
+		Namespace:  DefaultNamespace,
 		Spec: daemonjobv1.DaemonCronJobSetSpec{
 			NodeSelector: map[string]string{},
 			CronJobTemplate: daemonjobv1.DaemonCronJobSetTemplateSpec{

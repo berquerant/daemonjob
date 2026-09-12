@@ -33,7 +33,6 @@ import (
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -339,10 +338,8 @@ func (r *DaemonJobReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				if daemonJobName, ok := obj.GetLabels()[DaemonJobLabelDaemonJobName]; ok && daemonJobName != "" {
 					return []reconcile.Request{
 						{
-							NamespacedName: types.NamespacedName{
-								Namespace: obj.GetNamespace(),
-								Name:      daemonJobName,
-							},
+							Namespace: obj.GetNamespace(),
+							Name:      daemonJobName,
 						},
 					}
 				}
@@ -364,10 +361,8 @@ func (r *DaemonJobReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				for _, x := range xs.Items {
 					if daemonJobName, ok := x.Labels[DaemonJobLabelDaemonJobName]; ok {
 						requests = append(requests, reconcile.Request{
-							NamespacedName: types.NamespacedName{
-								Namespace: x.Namespace,
-								Name:      daemonJobName,
-							},
+							Namespace: x.Namespace,
+							Name:      daemonJobName,
 						})
 					}
 				}

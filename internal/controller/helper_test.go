@@ -20,7 +20,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type ControllerTest struct {
@@ -61,9 +60,7 @@ type ControllerTestContext struct {
 func (c ControllerTestContext) Run(namespaceName string) {
 	Context(c.Name, func() {
 		namespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: namespaceName,
-			},
+			Name: namespaceName,
 		}
 		BeforeEach(func() {
 			Expect(k8sClient.Create(ctx, namespace)).To(Succeed())
