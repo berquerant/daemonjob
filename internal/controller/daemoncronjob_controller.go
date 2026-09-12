@@ -25,7 +25,6 @@ import (
 	rbacv1 "k8s.io/api/rbac/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -266,10 +265,8 @@ func (r *DaemonCronJobReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				for _, x := range xs.Items {
 					if daemonCronJobName, ok := x.Labels[DaemonJobLabelDaemonCronJobName]; ok {
 						requests = append(requests, reconcile.Request{
-							NamespacedName: types.NamespacedName{
-								Namespace: x.Namespace,
-								Name:      daemonCronJobName,
-							},
+							Namespace: x.Namespace,
+							Name:      daemonCronJobName,
 						})
 					}
 				}

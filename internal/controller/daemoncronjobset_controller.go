@@ -25,7 +25,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -222,10 +221,8 @@ func (r *DaemonCronJobSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					for _, x := range xs.Items {
 						if daemonCronJobSetName, ok := x.Labels[DaemonJobLabelDaemonCronJobSetName]; ok {
 							requests = append(requests, reconcile.Request{
-								NamespacedName: types.NamespacedName{
-									Namespace: x.Namespace,
-									Name:      daemonCronJobSetName,
-								},
+								Namespace: x.Namespace,
+								Name:      daemonCronJobSetName,
 							})
 						}
 					}
@@ -244,10 +241,8 @@ func (r *DaemonCronJobSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				requests := make([]reconcile.Request, len(xs.Items))
 				for i, x := range xs.Items {
 					requests[i] = reconcile.Request{
-						NamespacedName: types.NamespacedName{
-							Namespace: x.Namespace,
-							Name:      x.Name,
-						},
+						Namespace: x.Namespace,
+						Name:      x.Name,
 					}
 				}
 				logger.Info("Node addition or update will trigger reconcile", "numberReconcile", len(requests))
