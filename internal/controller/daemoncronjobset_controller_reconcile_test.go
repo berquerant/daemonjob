@@ -42,9 +42,7 @@ func (d daemonCronJobSetControllerTest) reconcileNormalTest() ControllerTestCont
 		AfterEach: func(namespace string) {
 			By("Cleanup the specific resource instances DaemonCronJobSet")
 			Expect(k8sClient.DeleteAllOf(ctx, &daemonjobv1.DaemonCronJobSet{}, &client.DeleteAllOfOptions{
-				ListOptions: client.ListOptions{
-					Namespace: namespace,
-				},
+				Namespace: namespace,
 			})).To(Succeed())
 			By("Delete worker nodes")
 			nodes, err := List[*corev1.NodeList](ctx, k8sClient)
@@ -63,10 +61,8 @@ func (d daemonCronJobSetControllerTest) reconcileNormalTest() ControllerTestCont
 				controllerReconciler := d.newReconciler()
 				reconcile := func(name string) error {
 					_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
-						NamespacedName: types.NamespacedName{
-							Namespace: namespace,
-							Name:      name,
-						},
+						Namespace: namespace,
+						Name:      name,
 					})
 					return err
 				}

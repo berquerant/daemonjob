@@ -24,7 +24,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -58,9 +57,7 @@ func (daemonCronJobControllerTest) broadcastImage() string {
 
 func (daemonCronJobControllerTest) broadcastRole() *rbacv1.ClusterRole {
 	return &rbacv1.ClusterRole{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "broadcast-role",
-		},
+		Name: "broadcast-role",
 	}
 }
 
@@ -80,10 +77,8 @@ func (daemonCronJobControllerTest) assertShouldHaveCommonLabels(labels map[strin
 
 func (daemonCronJobControllerTest) newNormalDaemonCronJob(namespace, name string) *daemonjobv1.DaemonCronJob {
 	return &daemonjobv1.DaemonCronJob{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
+		Name:      name,
+		Namespace: namespace,
 		Spec: daemonjobv1.DaemonCronJobSpec{
 			BroadcastJobSpec: daemonjobv1.DaemonJobBroadcastJobSpec{
 				Resources: corev1.ResourceRequirements{

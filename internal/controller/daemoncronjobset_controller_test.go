@@ -22,7 +22,6 @@ import (
 	daemonjobv1 "github.com/berquerant/daemonjob/api/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var _ = daemonCronJobSetControllerTest{}.run()
@@ -48,10 +47,8 @@ func (d daemonCronJobSetControllerTest) newReconciler() *DaemonCronJobSetReconci
 
 func (daemonCronJobSetControllerTest) newNormalDaemonCronJobSet(namespace, name string) *daemonjobv1.DaemonCronJobSet {
 	return &daemonjobv1.DaemonCronJobSet{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
+		Name:      name,
+		Namespace: namespace,
 		Spec: daemonjobv1.DaemonCronJobSetSpec{
 			CronJobTemplate: daemonjobv1.DaemonCronJobSetTemplateSpec{
 				Metadata: daemonjobv1.DaemonCronJobSetTemplateMeta{
@@ -98,10 +95,8 @@ func (daemonCronJobSetControllerTest) nodeName(index int) string {
 
 func (d daemonCronJobSetControllerTest) addNode(nodeIndex int, labels map[string]string) error {
 	return k8sClient.Create(ctx, &corev1.Node{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:   d.nodeName(nodeIndex),
-			Labels: labels,
-		},
+		Name:   d.nodeName(nodeIndex),
+		Labels: labels,
 		Status: corev1.NodeStatus{
 			Phase: corev1.NodeRunning,
 		},
@@ -110,9 +105,7 @@ func (d daemonCronJobSetControllerTest) addNode(nodeIndex int, labels map[string
 
 func (d daemonCronJobSetControllerTest) deleteNode(nodeIndex int) error {
 	return k8sClient.Delete(ctx, &corev1.Node{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: d.nodeName(nodeIndex),
-		},
+		Name: d.nodeName(nodeIndex),
 	})
 }
 

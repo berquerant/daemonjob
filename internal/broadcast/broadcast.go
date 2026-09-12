@@ -181,20 +181,18 @@ func (r *Runner) BuildWorkerJob(nodeName string, daemonJobSpec *daemonjobv1.Daem
 
 	dJobTmpl := daemonJobSpec.JobTemplate
 	workerJob := &batchv1.Job{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        jobName,
-			Namespace:   r.Config.Namespace,
-			Labels:      make(map[string]string),
-			Annotations: make(map[string]string),
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					APIVersion:         batchv1.SchemeGroupVersion.String(),
-					Kind:               "Job",
-					Name:               r.Config.SelfName,
-					UID:                r.Config.ControllerUID,
-					Controller:         new(true),
-					BlockOwnerDeletion: new(true),
-				},
+		Name:        jobName,
+		Namespace:   r.Config.Namespace,
+		Labels:      make(map[string]string),
+		Annotations: make(map[string]string),
+		OwnerReferences: []metav1.OwnerReference{
+			{
+				APIVersion:         batchv1.SchemeGroupVersion.String(),
+				Kind:               "Job",
+				Name:               r.Config.SelfName,
+				UID:                r.Config.ControllerUID,
+				Controller:         new(true),
+				BlockOwnerDeletion: new(true),
 			},
 		},
 	}
