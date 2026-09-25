@@ -18,7 +18,7 @@ runs:
         HELM_VERSION=v4.2.4
         HELM_SCHEMA_VERSION=0.23.5
         YQ_VERSION=v4.53.6
-        CERTMANAGER_VERSION=v1.21.1
+        CERTMANAGER_VERSION=v1.21.2
         SHELLCHECK_VERSION=v0.11.0
         IMAGE_REGISTRY=ghcr.io/berquerant/daemonjob
         CACHE_DIR=tmp/cache
