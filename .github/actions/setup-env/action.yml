@@ -17,7 +17,7 @@ runs:
         CRD_REF_DOCS_VERSION=v0.3.0
         HELM_VERSION=v4.3.0
         HELM_SCHEMA_VERSION=0.23.5
-        YQ_VERSION=v4.53.6
+        YQ_VERSION=v4.54.1
         CERTMANAGER_VERSION=v1.21.2
         SHELLCHECK_VERSION=v0.11.0
         IMAGE_REGISTRY=ghcr.io/berquerant/daemonjob
