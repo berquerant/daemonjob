@@ -536,8 +536,8 @@ SOFTWARE.```
 ## github.com/go-logr/logr
 
 * Name: github.com/go-logr/logr
-* Version: v1.4.3
-* License: [Apache-2.0](https://github.com/go-logr/logr/blob/v1.4.3/LICENSE)
+* Version: v1.4.4
+* License: [Apache-2.0](https://github.com/go-logr/logr/blob/v1.4.4/LICENSE)
 
 ```
                                  Apache License
@@ -2521,8 +2521,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## github.com/grpc-ecosystem/grpc-gateway/v2
 
 * Name: github.com/grpc-ecosystem/grpc-gateway/v2
-* Version: v2.27.7
-* License: [BSD-3-Clause](https://github.com/grpc-ecosystem/grpc-gateway/blob/v2.27.7/LICENSE)
+* Version: v2.29.0
+* License: [BSD-3-Clause](https://github.com/grpc-ecosystem/grpc-gateway/blob/v2.29.0/LICENSE)
 
 ```
 Copyright (c) 2015, Gengo, Inc.
@@ -4925,8 +4925,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel
 
 * Name: go.opentelemetry.io/otel
-* Version: v1.44.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/v1.44.0/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/v1.45.0/LICENSE)
 
 ```
                                  Apache License
@@ -5163,8 +5163,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel
 
 * Name: go.opentelemetry.io/otel
-* Version: v1.44.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/v1.44.0/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/v1.45.0/LICENSE)
 
 ```
                                  Apache License
@@ -5401,8 +5401,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/exporters/otlp/otlptrace
 
 * Name: go.opentelemetry.io/otel/exporters/otlp/otlptrace
-* Version: v1.40.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.40.0/exporters/otlp/otlptrace/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.45.0/exporters/otlp/otlptrace/LICENSE)
 
 ```
                                  Apache License
@@ -5639,8 +5639,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/exporters/otlp/otlptrace
 
 * Name: go.opentelemetry.io/otel/exporters/otlp/otlptrace
-* Version: v1.40.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.40.0/exporters/otlp/otlptrace/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.45.0/exporters/otlp/otlptrace/LICENSE)
 
 ```
                                  Apache License
@@ -5877,8 +5877,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
 
 * Name: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
-* Version: v1.40.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracegrpc/v1.40.0/exporters/otlp/otlptrace/otlptracegrpc/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracegrpc/v1.45.0/exporters/otlp/otlptrace/otlptracegrpc/LICENSE)
 
 ```
                                  Apache License
@@ -6115,8 +6115,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
 
 * Name: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
-* Version: v1.40.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracegrpc/v1.40.0/exporters/otlp/otlptrace/otlptracegrpc/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracegrpc/v1.45.0/exporters/otlp/otlptrace/otlptracegrpc/LICENSE)
 
 ```
                                  Apache License
@@ -6353,8 +6353,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/metric
 
 * Name: go.opentelemetry.io/otel/metric
-* Version: v1.44.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.44.0/metric/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.45.0/metric/LICENSE)
 
 ```
                                  Apache License
@@ -6591,8 +6591,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/metric
 
 * Name: go.opentelemetry.io/otel/metric
-* Version: v1.44.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.44.0/metric/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.45.0/metric/LICENSE)
 
 ```
                                  Apache License
@@ -6829,8 +6829,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/sdk
 
 * Name: go.opentelemetry.io/otel/sdk
-* Version: v1.44.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.44.0/sdk/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.45.0/sdk/LICENSE)
 
 ```
                                  Apache License
@@ -7067,8 +7067,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/sdk
 
 * Name: go.opentelemetry.io/otel/sdk
-* Version: v1.44.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.44.0/sdk/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.45.0/sdk/LICENSE)
 
 ```
                                  Apache License
@@ -7305,8 +7305,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/trace
 
 * Name: go.opentelemetry.io/otel/trace
-* Version: v1.44.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.44.0/trace/LICENSE)
+* Version: v1.45.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.45.0/trace/LICENSE)
 
 ```
                                  Apache License
@@ -7543,8 +7543,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/trace
 
 * Name: go.opentelemetry.io/otel/trace
-* Version: v1.44.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.44.0/trace/LICENSE)
+* Version: v1.45.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.45.0/trace/LICENSE)
 
 ```
                                  Apache License
@@ -7781,8 +7781,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/proto/otlp
 
 * Name: go.opentelemetry.io/proto/otlp
-* Version: v1.9.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.9.0/otlp/LICENSE)
+* Version: v1.11.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.11.0/otlp/LICENSE)
 
 ```
                                  Apache License
@@ -8801,8 +8801,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## google.golang.org/genproto/googleapis/api
 
 * Name: google.golang.org/genproto/googleapis/api
-* Version: v0.0.0-20260526163538-3dc84a4a5aaa
-* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/3dc84a4a5aaa/googleapis/api/LICENSE)
+* Version: v0.0.0-20260803160001-6ac0973c030d
+* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/6ac0973c030d/googleapis/api/LICENSE)
 
 ```
 
@@ -9011,8 +9011,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## google.golang.org/genproto/googleapis/rpc
 
 * Name: google.golang.org/genproto/googleapis/rpc
-* Version: v0.0.0-20260526163538-3dc84a4a5aaa
-* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/3dc84a4a5aaa/googleapis/rpc/LICENSE)
+* Version: v0.0.0-20260803160001-6ac0973c030d
+* License: [Apache-2.0](https://github.com/googleapis/go-genproto/blob/6ac0973c030d/googleapis/rpc/LICENSE)
 
 ```
 
