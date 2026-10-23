@@ -10,6 +10,6 @@ plugins:
   # logcheck validates structured logging calls and parameters (e.g., balanced key-value pairs)
   - module: "sigs.k8s.io/logtools"
     import: "sigs.k8s.io/logtools/logcheck/gclplugin"
-    version: v0.10.1
+    version: v0.11.0
   - module: "sigs.k8s.io/kube-api-linter"
     version: v0.0.0-20260416084302-2b3d1fe14578
