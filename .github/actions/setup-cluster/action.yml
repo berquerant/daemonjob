@@ -8,9 +8,9 @@ runs:
   using: "composite"
   steps:
     - name: Init
-      uses: ./.github/actions/setup-init
+      uses: $/.github/actions/setup-init
     - name: Setup go
-      uses: ./.github/actions/setup-go
+      uses: $/.github/actions/setup-go
       with:
         cache: ${{ inputs.cache-go }}
     - name: Create cluster
