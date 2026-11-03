@@ -30,9 +30,9 @@ jobs:
         with:
           persist-credentials: false
       - name: Init
-        uses: ./.github/actions/setup-init
+        uses: $/.github/actions/setup-init
       - name: Setup go
-        uses: ./.github/actions/setup-go
+        uses: $/.github/actions/setup-go
       - name: Running Tests
         run: make test
 
@@ -42,7 +42,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: berquerant/govulncheck-action@7c7f559180aca72a1badcead05a3d5d81fc95c30 # v1.0.3
+      - uses: berquerant/govulncheck-action@v1.0.3
         with:
           go-version-file: go.mod
           cache-dependency-path: go.sum

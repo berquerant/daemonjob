@@ -26,19 +26,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Init
-        uses: ./.github/actions/setup-init
+        uses: $/.github/actions/setup-init
       - name: Cache docker local
         id: cache-docker-local
-        uses: ./.github/actions/cache-docker-local
+        uses: $/.github/actions/cache-docker-local
         with:
           path: ${{ env.DOCKER_CACHE_DIR }}
       - name: Setup buildx
-        uses: ./.github/actions/setup-buildx
+        uses: $/.github/actions/setup-buildx
       - name: Setup go
-        uses: ./.github/actions/setup-go
+        uses: $/.github/actions/setup-go
       - name: Running Test e2e
         run: make test-e2e

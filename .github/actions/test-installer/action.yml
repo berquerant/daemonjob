@@ -20,18 +20,18 @@ runs:
   using: "composite"
   steps:
     - name: Setup cluster
-      uses: ./.github/actions/setup-cluster
+      uses: $/.github/actions/setup-cluster
       with:
         cache-go: ${{ inputs.cache-go }}
     - name: Cache docker local
       id: cache-docker-local
-      uses: ./.github/actions/cache-docker-local
+      uses: $/.github/actions/cache-docker-local
       with:
         path: ${{ inputs.docker-cache-dir }}
         restore-only: true
       if: ${{ inputs.docker-cache-dir != '' }}
     - name: Setup buildx
-      uses: ./.github/actions/setup-buildx
+      uses: $/.github/actions/setup-buildx
       if: ${{ inputs.build-images == 'true' }}
     - name: Test manifest
       shell: bash

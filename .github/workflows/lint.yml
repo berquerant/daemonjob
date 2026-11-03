@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone the code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Init
-        uses: ./.github/actions/setup-init
+        uses: $/.github/actions/setup-init
       - name: Setup go
-        uses: ./.github/actions/setup-go
+        uses: $/.github/actions/setup-go
       - name: Run linters
         run: make lint
