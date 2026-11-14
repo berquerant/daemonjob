@@ -7305,8 +7305,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/sdk
 
 * Name: go.opentelemetry.io/otel/sdk
-* Version: v1.45.0
-* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.45.0/sdk/LICENSE)
+* Version: v1.47.0
+* License: [Apache-2.0](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.47.0/sdk/LICENSE)
 
 ```
                                  Apache License
@@ -7543,8 +7543,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 ## go.opentelemetry.io/otel/sdk
 
 * Name: go.opentelemetry.io/otel/sdk
-* Version: v1.45.0
-* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.45.0/sdk/LICENSE)
+* Version: v1.47.0
+* License: [BSD-3-Clause](https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.47.0/sdk/LICENSE)
 
 ```
                                  Apache License
