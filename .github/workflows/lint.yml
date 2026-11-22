@@ -32,3 +32,8 @@ jobs:
         uses: $/.github/actions/setup-go
       - name: Run linters
         run: make lint
+
+  actions-lock-verify:
+    permissions:
+      contents: read
+    uses: berquerant/reusable-workflows/.github/workflows/actions-lock-verify.yml@v0.1.0
