@@ -10,7 +10,7 @@ runs:
     - name: Init
       uses: $/.github/actions/setup-init
     - name: Setup go
-      uses: $/.github/actions/setup-go
+      uses: berquerant/reusable-workflows/actions/setup-go@v0.10.1
       with:
         cache: ${{ inputs.cache-go }}
     - name: Create cluster
