@@ -31,7 +31,7 @@ runs:
         restore-only: true
       if: ${{ inputs.docker-cache-dir != '' }}
     - name: Setup buildx
-      uses: $/.github/actions/setup-buildx
+      uses: berquerant/reusable-workflows/actions/setup-buildx@v0.10.1
       if: ${{ inputs.build-images == 'true' }}
     - name: Test manifest
       shell: bash

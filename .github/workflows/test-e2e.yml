@@ -37,8 +37,8 @@ jobs:
         with:
           path: ${{ env.DOCKER_CACHE_DIR }}
       - name: Setup buildx
-        uses: $/.github/actions/setup-buildx
+        uses: berquerant/reusable-workflows/actions/setup-buildx@v0.10.1
       - name: Setup go
-        uses: $/.github/actions/setup-go
+        uses: berquerant/reusable-workflows/actions/setup-go@v0.10.1
       - name: Running Test e2e
         run: make test-e2e
